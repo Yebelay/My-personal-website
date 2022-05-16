@@ -1,5 +1,5 @@
 ---
-bio: I am Biostatistician.
+about me: I am Biostatistician.
 education:
   courses:
   - course: MSc in Biostatistics

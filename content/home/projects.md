@@ -9,7 +9,7 @@ headless: true
 # Order that this section appears on the page.
 weight: 65
 
-title: Projects
+title: Lecture Notes
 subtitle: ''
 
 content:
@@ -25,11 +25,13 @@ content:
   # To filter by a specific tag, set `tag` to an existing tag name.
   # To remove the toolbar, delete the entire `filter_button` block.
   filter_button:
-    - name: All
+    - name: Statistical Computing
       tag: '*'
-    - name: Deep Learning
-      tag: Deep Learning
-    - name: Other
+    - name: Biostatistics&Epidemiology
+      tag: '*'
+    - name: Regression Analysis
+      tag: Regression Analysis
+    - name: Categorical Data Analysis
       tag: Demo
 
 design:

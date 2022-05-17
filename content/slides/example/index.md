@@ -156,7 +156,6 @@ Create `assets/css/reveal_custom.css` with:
   color: navy;
 }
 ```
-
 ---
 
 # Questions?

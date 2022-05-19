@@ -4,7 +4,6 @@ external_link: ""
 slides: example
 summary: An example of using the in-built project page.
 tags:
-- Deep Learning
 title: Statistical Computing
 url_code: ""
 url_pdf: ""

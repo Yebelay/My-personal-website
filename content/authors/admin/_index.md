@@ -1,25 +1,32 @@
 ---
 about me: I am Biostatistician.
+
 education:
   courses:
   - course: MSc in Biostatistics
-    institution: Stellenbosch University, South Africa
+    institution: "[Stellenbosch University, South Africa](https://www.sun.ac.za/english)"
     year: 2022
+  
   - course: MSc in Statistics
-    institution: Addis Ababa University, Ethiopia
+    institution: "[Addis Ababa University, Ethiopia](http://www.aau.edu.et/)"
     year: 2017
   - course: BSc in Statistics
-    institution: Wollo University, Ethiopia
+    institution: "[Wollo University, Ethiopia](https://wu.edu.et/)"
     year: 2012
+
 email: ""
 highlight_name: true
+
 interests:
 - Longitudinal Data Analysis
 - Survival Data Analysis
-- Observational Data Analysis/Causal inference
+- Causal inference/Impact Evaluation
+
 organizations:
+
 - name: Debre Markos University
-role: Lecturer at Department of Statistics
+
+role: Lecturer at Department of Statistics and Researcher at C4ED
 social:
 - icon: envelope
   icon_pack: fas
@@ -37,7 +44,7 @@ superuser: true
 title: Yebelay Berehan
 ---
 
-Yebelay Berehan is a lecturer of Biostatistics at department of Statistics with 9+ year of experience in teaching and implementing statistics. Proficient in R and SAS programming, STATA, SPSS. 
+Yebelay Berehan is a lecturer of Biostatistics at department of Statistics and Researcher at Center for Evaluation and development. I have 11 year of experience in teaching and implementing statistics. My interest is Causal inference, Longitudinal data analysis, Survival data analysis. I am good in statistical programming and data analytics using R.  Statistical software: R SAS, STATA, SPSS. 
 
 
 {{< icon name="download" pack="fas" >}} Download my {{< staticref "uploads/Resume1.pdf" "newtab" >}}CV{{< /staticref >}}.

@@ -23,18 +23,20 @@ date_format: Jan 2006
 #   Begin multi-line descriptions with YAML's `|2-` multi-line prefix.
 experience:
 
-experience:
-experience:
   - title: Survey Manager
     company: "[Center for Evaluation and Development (C4ED)](https://c4ed.org/)"
     location: Ethiopia
     date_start: '2023-05-01'
     date_end: ''
-
-
+    
+  - title: Senior Research Officer
+    company: "[Frontieri consulting Plc](https://frontieri.com/)"
+    location: Ethiopia
+    date_start: '2022-07-04'
+    date_end: '2023-04-30'
 
   - title: Biostatistics Experience and Technical Assistance (BETA) internship/consulting
-    company: CDC
+    company: "[CDC Ethiopa](https://www.cdc.gov/globalhealth/countries/ethiopia/)"
     company_url: ''
     #company_logo: org-gc
     location: Ethiopia
@@ -42,7 +44,7 @@ experience:
     date_end: '2022-07-12'
 
   - title: Lecturer
-    company: Debre Markos University 
+    company: "[Debre Markos University](http://www.dmu.edu.et/)" 
     company_url: ''
     #company_logo: org-x
     location: Ethiopia

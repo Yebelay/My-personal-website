@@ -4,7 +4,7 @@ theme: "starter-hugo-academic"
 # Hugo Documentation: https://gohugo.io/getting-started/configuration/#all-configuration-settings
 # This file is formatted using YAML syntax - learn more at https://learnxinyminutes.com/docs/yaml/
 
-title: Yebelay B. Berehan # Website name
+title: Yebelay Berehan # Website name
 baseURL: 'https://yebelay.netlify.app/' # Website URL
 
 ############################

@@ -70,7 +70,7 @@ features:
   privacy_pack:
     enable: false
   repository:
-    url: 'https://github.com/<username>/<repository>'
+    url: 'https://github.com/https://github.com/Yebelay/My-personal-website'
     content_dir: content
     branch: master
   avatar:

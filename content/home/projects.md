@@ -27,7 +27,7 @@ content:
   filter_button:
     - name: Statistical Computing
       tag: '*'
-    - name: Biostatistics&Epidemiology
+    - name: Biostatistics
       tag: '*'
     - name: Regression Analysis
       tag: Regression Analysis
@@ -47,4 +47,5 @@ design:
 
   # For Showcase view, flip alternate rows?
   flip_alt_rows: false
+  
 ---

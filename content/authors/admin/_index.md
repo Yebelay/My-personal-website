@@ -16,9 +16,10 @@ email: ""
 highlight_name: true
 
 interests:
+- Causal inference/Impact Evaluation
 - Longitudinal Data Analysis
 - Survival Data Analysis
-- Causal inference/Impact Evaluation
+
 
 organizations:
 

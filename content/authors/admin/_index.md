@@ -1,12 +1,10 @@
 ---
 about me: I am Biostatistician.
-
 education:
   courses:
   - course: MSc in Biostatistics
     institution: "[Stellenbosch University, South Africa](https://www.sun.ac.za/english)"
     year: 2022
-  
   - course: MSc in Statistics
     institution: "[Addis Ababa University, Ethiopia](http://www.aau.edu.et/)"
     year: 2017

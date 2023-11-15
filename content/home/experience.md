@@ -22,6 +22,15 @@ date_format: Jan 2006
 #   Leave `date_end` empty if it's your current employer.
 #   Begin multi-line descriptions with YAML's `|2-` multi-line prefix.
 experience:
+
+  - title: Survey Manager
+    company: Center for evaluation and development (C4ED)
+    company_url: ''
+    company_logo: https://c4ed.org/
+    location: Ethiopia
+    date_start: '2023-05-01'
+    date_end: ''
+
   - title: Biostatistics Experience and Technical Assistance (BETA) internship/consulting
     company: CDC
     company_url: ''

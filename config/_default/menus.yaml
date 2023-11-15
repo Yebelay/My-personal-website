@@ -18,8 +18,11 @@ main:
  #   weight: 40
   - name: Publications
     url: '#featured'
-    weight: 50
+    weight: 40
   - name: Contact
+    url: '#contact'
+    weight: 50
+  - name: Skills
     url: '#contact'
     weight: 60
 

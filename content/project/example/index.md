@@ -1,5 +1,5 @@
 ---
-date: "2022-05-16T00:00:00Z"
+date: "`r Sys.time()`"
 external_link: ""
 slides: example
 summary: An example of using the in-built project page.

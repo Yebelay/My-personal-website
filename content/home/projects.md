@@ -27,11 +27,11 @@ content:
   filter_button:
     - name: Statistical Computing
       tag: '*'
-    - name: Biostatistics
+    - name: Causal Inference
       tag: '*'
     - name: Regression Analysis
       tag: Regression Analysis
-    - name: Categorical Data Analysis
+    - name: Impact Evaluation
       tag: '*'
 
 design:

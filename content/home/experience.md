@@ -24,13 +24,13 @@ date_format: Jan 2006
 experience:
 
 experience:
+experience:
   - title: Survey Manager
-    company: Center for Evaluation and Development (C4ED)
-    company_url: 'https://c4ed.org/'
-    company_logo: 'path/to/logo.png'
+    company: "[Center for Evaluation and Development (C4ED)](https://c4ed.org/)"
     location: Ethiopia
     date_start: '2023-05-01'
     date_end: ''
+
 
 
   - title: Biostatistics Experience and Technical Assistance (BETA) internship/consulting

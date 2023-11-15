@@ -1,8 +1,8 @@
 ---
 title: "Determinants of institutional delivery service utilization in Ethiopia: a population based cross sectional study"
-date: 2022-01-20
-publishDate: 2022-01-04T13:58:37.320856Z
-authors: ["David Zendle", "Rachel Meyer", "Paul Cairns", "Stuart Waters", "Nick Ballou"]
+publishDate: 2020-07-08
+authors: ["Yebelay Berelie", "Dawit Yeshiwas", "Leltework Yismaw", "Muluneh Alene"]
+
 publication_types: ["2"]
 author_notes:
 - ""

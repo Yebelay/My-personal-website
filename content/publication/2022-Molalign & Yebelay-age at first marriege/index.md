@@ -1,7 +1,6 @@
 ---
-title: "The Changing Face of Desktop Video Game Monetisation: An Exploration of Trends in Loot Boxes, Pay to Win, and Cosmetic Microtransactions in the Most-Played Steam Games of 2010-2019"
-date: 2020-05-07
-publishDate: 2020-01-04T13:58:37.322112Z
+title: "Modeling the Determinant of Time to Age at First Marriage among Women in Ethiopia using Cox models with mixed effects"
+publishDate: 2022-01-04
 authors: ["Molalign Gualu Gobena", "Yebelay Berelie"]
 author_notes:
 - ""

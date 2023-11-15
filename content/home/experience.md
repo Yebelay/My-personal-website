@@ -23,13 +23,15 @@ date_format: Jan 2006
 #   Begin multi-line descriptions with YAML's `|2-` multi-line prefix.
 experience:
 
+experience:
   - title: Survey Manager
-    company: Center for evaluation and development (C4ED)
-    company_url: ''
-    company_logo: 'https://c4ed.org/'
+    company: Center for Evaluation and Development (C4ED)
+    company_url: 'https://c4ed.org/'
+    company_logo: 'path/to/logo.png'
     location: Ethiopia
     date_start: '2023-05-01'
     date_end: ''
+
 
   - title: Biostatistics Experience and Technical Assistance (BETA) internship/consulting
     company: CDC

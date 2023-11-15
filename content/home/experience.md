@@ -26,7 +26,7 @@ experience:
   - title: Survey Manager
     company: Center for evaluation and development (C4ED)
     company_url: ''
-    #company_logo: https://c4ed.org/
+    company_logo: 'https://c4ed.org/'
     location: Ethiopia
     date_start: '2023-05-01'
     date_end: ''

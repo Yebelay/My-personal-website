@@ -17,30 +17,30 @@ subtitle:
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 
 feature:
-  - description: Process | Analyze | Visualize
+  - description: Data management | Analyze | Visualize
     icon: r-project
     icon_pack: fab
-    name: Inferential Statistics in R
-  - description: Open data/materials/code | Registered reports <br /> Synthetic data | Team science
-    icon: osf
-    icon_pack: ai
-    name: Open Research
-  - description: Digital trace data | Surveys | Engagement
+    name: R Programming
+  - description: Data management | Analysis
+    icon: stata
+    icon_pack: fab
+    name: STATA
+  - description: Project Management | Surveys | budget 
     icon: user-astronaut
     icon_pack: fas
-    name: (Games) User Research
-  - description: Ideate | Build | Test | Evaluate <br /> Development in Unity (C#)
+    name: Project Management
+  - description: Causal inference | Impact Evaluation
     icon: gamepad
     icon_pack: fas
-    name: Game Design
+    name: Impact Evaluation
   - description: Self-determination theory | Intrinsic vs extrinsic motivation
     icon: brain
     icon_pack: fas
     name: Motivational Psychology
-  - description: Thematic analysis | Grounded theory
+  - description: Study design | Sampling technique | Statistical modelling
     icon: file-audio
     icon_pack: fas
-    name: Qualitative Methods
+    name: Study design
 # Uncomment to use emoji icons.
 #- icon: ":smile:"
 #  icon_pack: "emoji"

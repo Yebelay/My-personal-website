@@ -17,14 +17,14 @@ subtitle:
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 
 feature:
-  - description: Data management | Analyze | Visualize
+  - description: R | STATA | SAS | SPSS
     icon: r-project
     icon_pack: fab
     name: R Programming
-  - description: Data management | Analysis
+  - description: Kobo toolbox | SurveyCTO | REDCap 
     icon: stata
     icon_pack: fab
-    name: STATA
+    name: Data collection app
   - description: Project Management | Surveys | budget 
     icon: user-astronaut
     icon_pack: fas
@@ -33,10 +33,10 @@ feature:
     icon: gamepad
     icon_pack: fas
     name: Impact Evaluation
-  - description: Self-determination theory | Intrinsic vs extrinsic motivation
+  - description: Power BI | R markdown (flexdashboard) | Shine app
     icon: brain
     icon_pack: fas
-    name: Motivational Psychology
+    name: Dashboard
   - description: Study design | Sampling technique | Statistical modelling
     icon: file-audio
     icon_pack: fas

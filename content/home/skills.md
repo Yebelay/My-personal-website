@@ -18,16 +18,16 @@ subtitle: The following are some of my skills
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 feature:
 - description: Statistical Software
-  icon_pack: custom  
+  icon_pack: fab  
   icons:
     - name: r-project
       icon_pack: fab
     - name: Stata  # Icon for Stata
-      icon_pack: custom
+      icon_pack: fab
     - name: SAS  # Icon for SAS
-      icon_pack: custom
+      icon_pack: fab
     - name: SPSS  # Icon for SPSS
-      icon_pack: custom
+      icon_pack: fab
 
   
   - description: Project management, and Team managment

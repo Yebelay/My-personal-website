@@ -16,10 +16,19 @@ subtitle:
 # - Add/remove as many `feature` blocks below as you like.
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 feature:
-  - description: Process | Analyze | Visualize
-    icon: r-project
-    icon_pack: fab
-    name: Inferential Statistics in R
+  - description: Statistical Software
+    icon_pack: custom  
+    icons:
+      - name: r-project
+        icon_pack: fab
+      - name: STATA  # Icon for Stata
+        pack: custom
+      - name: SAS  # Icon for SAS
+        pack: custom
+      - name: SPSS  # Icon for SPSS
+        pack: custom
+
+  
   - description: Open data/materials/code | Registered reports <br /> Synthetic data | Team science
     icon: osf
     icon_pack: ai

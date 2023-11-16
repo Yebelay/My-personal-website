@@ -6,10 +6,10 @@
 # Appearance
 
 appearance:
-  theme_day: classic
-  theme_night: dark
-  font: serif
-  font_size: M
+  theme_day: minimal
+  theme_night: minimal
+  font: minimal
+  font_size: L
 
 
 # SEO
@@ -19,8 +19,8 @@ marketing:
     site_type: Person
     local_business_type: ''
     org_name: ''
-    description: 'A highly-customizable Hugo academic resume theme powered by Wowchemy website builder.'
-    twitter: 'wowchemy'
+    description: 'I am Senior Biostatistician'
+    twitter: ''
   analytics:
     google_analytics: ''
     baidu_tongji: ''
@@ -44,7 +44,7 @@ header:
 
 footer:
   copyright:
-    notice: '© {year} Me. This work is licensed under {license}'
+    notice: '© {year} Yebelay Berehan. This work is licensed under {license}'
     license:
       enable: true
       allow_derivatives: false
@@ -71,7 +71,7 @@ features:
   privacy_pack:
     enable: false
   repository:
-    url: 'https://github.com/https://github.com/Yebelay/My-personal-website'
+    url: 'https://github.com/Yebelay/My-personal-website'
     content_dir: content
     branch: master
   avatar:

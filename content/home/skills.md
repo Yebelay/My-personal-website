@@ -29,26 +29,29 @@ feature:
         pack: custom
 
   
-  - description: Open data/materials/code | Registered reports <br /> Synthetic data | Team science
+  - description: Project management, and Team managment
     icon: osf
     icon_pack: ai
-    name: Open Research
-  - description: Digital trace data | Surveys | Engagement
+    name: Project Management
+    
+  - description: Data mangment | Cleaning | Visualizing
     icon: user-astronaut
     icon_pack: fas
-    name: (Games) User Research
+    name: Data managment
   - description: Ideate | Build | Test | Evaluate <br /> Development in Unity (C#)
     icon: gamepad
     icon_pack: fas
     name: Game Design
+    
   - description: Self-determination theory | Intrinsic vs extrinsic motivation
-    icon: brain
+    icon: stata
     icon_pack: fas
-    name: Motivational Psychology
-  - description: Thematic analysis | Grounded theory
+    name: STATA
+    
+  - description: Using R | STATA | SAS | SPSS
     icon: file-audio
     icon_pack: fas
-    name: Qualitative Methods
+    name: Data Analysis
 # Uncomment to use emoji icons.
 #- icon: ":smile:"
 #  icon_pack: "emoji"

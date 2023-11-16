@@ -40,19 +40,20 @@ feature:
     icon_pack: fas
     name: Data managment
   - description: Ideate | Build | Test | Evaluate <br /> Development in Unity (C#)
-    icon: gamepad
-    icon_pack: fas
-    name: Game Design
+    icon: REDCap
+    icon_pack: fab
+    name: REDCap
     
   - description: Self-determination theory | Intrinsic vs extrinsic motivation
-    icon: stata
-    icon_pack: fas
+    icon: STATA
+    icon_pack: fab
     name: STATA
     
   - description: Using R | STATA | SAS | SPSS
-    icon: file-audio
-    icon_pack: fas
+    icon: r-project
+    icon_pack: fab
     name: Data Analysis
+    
 # Uncomment to use emoji icons.
 #- icon: ":smile:"
 #  icon_pack: "emoji"

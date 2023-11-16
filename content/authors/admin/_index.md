@@ -43,8 +43,7 @@ superuser: true
 title: Yebelay Berehan
 ---
 
-Yebelay Berehan is a lecturer of Biostatistics at department of Statistics and Researcher at Center for Evaluation and development. I have 11 year of experience in teaching and implementing statistics. My interest is Causal inference, Longitudinal data analysis, Survival data analysis. I am good in statistical programming and data analytics using R.  Statistical software: R SAS, STATA, SPSS. 
-
+I have dual master's degrees in Biostatistics from Stellenbosch University and Statistics from Addis Ababa University, coupled with 11+ years of experience in project leading, data management, analysis, and teaching. These experiences equipped me with a deep understanding of complex data, its management, analysis and use with application of different statistical methods. I have interest in causal inference, longitudinal data analysis and survival data analysis. I have a piece of statistical software training experiences (R, SAS, SPSS). 
 
 To download or look my CV click {{< staticref "uploads/resume.pdf" "newtab" >}} {{< icon name="download" pack="fas" >}}{{< /staticref >}}.
 

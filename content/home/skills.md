@@ -17,17 +17,17 @@ subtitle: The following are some of my skills
 # - Add/remove as many `feature` blocks below as you like.
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 feature:
-  - description: Statistical Software
-    icon_pack: custom  
-    icons:
-      - name: r-project
-        icon_pack: fab
-      - name: STATA  # Icon for Stata
-        pack: custom
-      - name: SAS  # Icon for SAS
-        pack: custom
-      - name: SPSS  # Icon for SPSS
-        pack: custom
+- description: Statistical Software
+  icon_pack: custom  
+  icons:
+    - name: r-project
+      icon_pack: fab
+    - name: Stata  # Icon for Stata
+      icon_pack: custom
+    - name: SAS  # Icon for SAS
+      icon_pack: custom
+    - name: SPSS  # Icon for SPSS
+      icon_pack: custom
 
   
   - description: Project management, and Team managment

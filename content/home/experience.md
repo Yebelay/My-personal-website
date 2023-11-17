@@ -49,7 +49,7 @@ experience:
     #company_logo: org-x
     location: Ethiopia
     date_start: '2013-01-01'
-    date_end: ''
+    date_end: '2023'
 
 
 design:

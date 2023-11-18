@@ -21,10 +21,12 @@ feature:
     icon: r-project
     icon_pack: fab
     name: R Programming
+    
   - description: Kobo toolbox | SurveyCTO | REDCap 
-    icon: stata
+    icon: sas
     icon_pack: custom
     name: Data collection app
+    
   - description: Project Management | Surveys | budget 
     icon: user-astronaut
     icon_pack: fas

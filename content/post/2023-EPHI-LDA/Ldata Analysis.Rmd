@@ -1,0 +1,3655 @@
+---
+title: |
+     <span style="color:white"> Longitudinal Data Analysis </span>
+
+author: <span style="color:#38BDDE"> Anteneh Tessema and Yebelay Berehan </span>
+  
+institute: |
+           <span style = 'font-size: 80%;'>  Ethiopian Public Health Institute (EPHI) 
+           National Data Management Center for Health (NDMC)</span>
+           
+date: |
+      <span style = 'font-size: 50%;'> August 24-27, 2023
+      
+output:
+  xaringan::moon_reader:
+    css: [default,  xaringan-themer.css, rladies-fonts]
+    nature:
+     # highlightStyle: googlecode
+      highlightLines: true
+      #highlightLanguage: ["r"]
+      ratio: "14:9"
+      highlightSpans: true
+      highlightStyle: github
+      countIncrementalSlides: false
+      titleSlideClass: ["center","middle"]
+  includes:
+    in_header: columns.tex
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(here)
+library(snakecase)
+library(DT)
+library(naniar)
+#library(kableExtra)
+```
+
+```{r xaringan-logo, echo=FALSE}
+xaringanExtra::use_logo(image_url = "Slides/Images/tidyverse.png", width = "95px",height = "95px")
+```
+
+```{r xaringan-themer, include=FALSE}
+library(xaringanthemer)
+mono_light(
+  base_color =  "#151B54", ## OHSU Marquam
+  text_color = "#2F539B",
+ # "#0000A5",
+  base_font_size ="22px",
+  code_highlight_color = "#c0e8f5",
+  link_color = "#38BDDE",
+  background_color = "#FFFFFF",
+  header_font_google = google_font("Josefin Sans"),
+  #text_font_google   = google_font("Montserrat", "300", "300i","400i","700"),
+  code_font_family = "'Source Code Pro'",
+  code_font_size = "0.8em",
+  text_slide_number_color = "#FF0266",
+  code_inline_color = "#0000FF",
+  #inverse_background_color = "#272822",
+  #title_slide_background_color = inverse_background_color,
+ # code_font_size = "0.6em", 
+  footnote_color = "blue",
+  #footnote_position_bottom = "0.1em"
+  )
+```
+
+
+
+####	Topics to be covered 
+
+** <span style="color:purple">Day 1: Continuous Longitudinal Data</span>**
+  *  <span style="color:red">Objectives</span> 
+  *  <span style="color:red">Introduction to longitudinal data analysis</span> 
+  *  <span style="color:red">Features of longitudinal data</span> 
+  * <span style="color:red">Motivating examples</span>
+  * <span style="color:red">Cross sectional vs longitudinal data</span>
+  * <span style="color:red">Simple methods</span>
+  * <span style="color:red">Exploratory data analysis</span>
+  
+** <span style="color:purple">Day 2: Modelling of Longitudinal Data</span>**
+  *	Linear Mixed Effects Models
+  * Marginal Models
+  * Estimation of Marginal model
+  
+  
+---
+** <span style="color:purple">Day 3: Methods for Discrete Data</span> **
+  * <span style="color:blue">Generalized Estimating Equations (GEE)</span>
+  * <span style="color:blue">Generalized Linear Mixed Models (GLMM)</span>
+ 
+** <span style="color:purple">Day 4: Addressing Missing Data in Longitudinal Studies</span>**
+  * Types of Missing Data Mechanisms (MCR, MR, NMR)
+  * Handling Missing Data: Multiple Imputation
+  * Handling Missing Data: Weighted GEE
+
+---
+
+#### Goal of the training
+
+The goal of this training is to:
+
+- Provide an overview of fundamental statistical models and methods for the analysis of **longitudinal data**, including key theoretical results presented.
+
+- Focus on the practical implementation of these methods in **R **.
+
+- Help **trainees** gain a comprehensive understanding of the properties and use of modern methods for **longitudinal data analysis**.
+
+- Enable trainees to pose scientific questions within the context of appropriate statistical models and **carry out and interpret analyses effectively**.
+
+---
+
+#### Primary Objectives ... (1)
+
+
+- Understand how longitudinal data differs from cross sectional data.
+
+- Explain the consequences of ignoring correlated observations.
+
+- Appreciate the merits of longitudinal data analysis.
+
+- Apply graphical techniques to explore repeated/dependent/clustered data.
+
+- Discuss different model families.
+
+- Analysis and interpret results from longitudinal studies.
+
+
+---
+
+#### Primary Objectives ... (2) 
+
+- Understand LDA Models for Gaussian and non Gaussian data.
+
+- Be familiar with theoretical background of statistical techniques used for analyzing longitudinal and handling of missing data.
+
+- Translate statistical theory into practical application.
+
+- Prepare scientific reports describing methods used for analysis, results obtained and their interpretation.
+
+- Communicate methods used and the clinical/scientific meaning of the results from a longitudinal data analysis and defending their analysis.
+
+
+
+---
+
+#### Primary Objectives ... recap 
+- Understand the effect of non-independence in longitudinal data.
+
+- Recognize limitations of classical analysis methods in longitudinal studies.
+
+- Explore and analyse the marginal distribution of longitudinal data.
+
+- Learn and apply methods for analyzing continuous outcomes using linear mixed effects models.
+
+- Utilize methods for analyzing discrete data in longitudinal studies using GEE and GGLMM.
+
+- Gain knowledge about missing data mechanisms and techniques for handling them.
+
+- Statistical computing packages: R, Stata and SAS
+
+
+
+---
+class: inverse,  middle
+
+# Day 1
+
+## Continuous Longitudinal Data
+ 
+ * Introduction to longitudinal data analysis
+ * Motivational Examples
+ 
+---
+
+
+#### Introduction to longitudinal data analysis
+  
+##### Repeated measures ... (1)
+
+- Statistical techniques like ANOVA and regression have a basic assumption that the residual or error terms are independent and identically distribution (iid).
+
+- In applied sciences, often confronted with the collection of correlated data.
+
+ - The term embraces a multitude of data structures such as multivariate observations, clustered data, repeated measurements,longitudinal data & spatially correlated data.
+
+- The distinguishing feature of repeated data is that they are correlated.
+
+---
+
+##### Repeated measures ... (2)
+
+- Familiar examples of clustered data are families, schools, hospitals, towns, litters, ...
+ - In each of these examples, a cluster is a collection of sub units on which observations are made.
+
+- Another form of clustering arises when data are measured repeatedly on the same unit.
+
+ - When these repeated measurements are taken over time, it is called a longitudinal study (panel data).
+
+ - When the correlation occurs over space, it is called a Spatial study.
+
+---
+
+#### Longitudinal data
+
+- Special forms of repeated measurements.
+
+- Longitudinal Studies: Studies in which individuals are measured repeatedly through time.
+
+- Longitudinal data (LD) sets differ from time Series (TS) data sets.
+
+ - LD: usually consists of a large number of a short series of time points.
+
+ - TS: usually consists of a single, long series of time points.
+
+- Examples of LD:
+
+  - Monthly CD4 count (viral load) of a patient over time.
+
+  - Psychological change of a patient.
+
+  - The effect of a treatment to cure a disease over time.
+
+---
+
+#### Features of longitudinal data
+
+- Defining feature of longitudinal studies is that measurements of the same individuals are taken repeatedly through time.
+
+- Longitudinal studies allow direct study of change over time.
+
+- Objective: to characterize the change in response over time and factors that influence change.
+
+- With repeated measures on individuals, we can capture within-individual change.
+
+- In longitudinal studies, the outcome variable can be:
+  - Continuous (e.g., blood lead levels).
+  - Binary (e.g., presence/absence).
+  - Count (e.g., number of epileptic seizures).
+
+- The data set can be incomplete (missing data/dropout).
+
+- Subjects may be measured at different occasions.
+
+- In this module we will master a set of statistical tools that can handle all of these cases.
+
+- Emphasis on concepts, model building, software and interpretation.
+
+---
+
+#### Famous LD examples ... (1)
+
+The Baltimore Longitudinal Study of Aging (BLSA)
+
+- BLSA: Ongoing, multidisciplinary observational study, started in 1958
+
+- Objective : characterize the many aspects of the aging process and learn how people can adapt to aging
+
+- Volunteers return approximately every 2 years for 3 days of biomedical and psychological examinations
+
+- at first only males (over 1500 by now), later also females
+
+- an average of about 20 years of follow up
+
+ - NCT00233272
+
+---
+
+#### Famous LD examples ... (2)
+
+Indonesian children’s health study (ICHS)
+
+- Interest is to investigate the association between risk of respiratory illness and vitamin A deficiency
+
+- 250 children followed
+
+- Multivariate data have received most attention in the stat. literature.
+
+- Remarkable developments in statistical methodology for LDA have been done in the past 30 years.
+
+---
+
+#### <span style="color:purple"> Advantages of modern longitudinal methods ... (1)</span> 
+
+- You have much more flexibility in research design.
+
+   - Not everyone needs the same rigid data collection schedule.
+   - Not everyone needs the same number of measurements—can use all cases, even those with just one measurement!
+
+
+- You can identify temporal patterns in the data.
+
+   - Does the outcome increase, decrease, or remain stable over time?
+   - Is the general pattern linear or non-linear?
+   - Are there abrupt shifts at substantively interesting moments?
+
+- You can include time-varying predictors.
+
+- Can provide information about individual change.
+
+---
+
+#### <span style="color:purple"> Advantages of modern longitudinal methods ... (2)</span> 
+
+- You can include interactions with time (to test whether a predictor’s effect varies over time).
+   - Some effects dissipate—they wear off.
+   - Some effects increase—they become more important.
+   - Some effects are especially pronounced at particular times.
+
+- Can provide more efficient estimators than cross-sectional designs with the same number and pattern of observations.
+
+- Can separate aging effects (changes over time within individuals) from cohort effects (differences between subjects at baseline) ⇒ cross-sectional design can’t do this.
+
+---
+
+#### <span style="color:purple">Challenges of Longitudinal Data Analysis</span>
+
+- Observations are not, by definition, independent → must account for dependency in data.
+
+- Analysis methods not as well developed, especially for more sophisticated models.
+
+- Difficulty of using state-of-the-art software.
+
+- Computationally intensive.
+
+- Unbalanced designs, missing data, attrition.
+
+- Carry-over effects (when the repeated factor is condition or treatment, not time).
+
+---
+
+#### Recap:
+
+- Longitudinal studies:
+  - Measurements of the same individuals are taken repeatedly through time.
+  - Allow direct study of change over time.
+  - We can capture within-individual change.
+- Objective: to characterize the change in response over time and factors that influence change.
+
+---
+
+#### Motivating examples
+
+**<span style="color:blue">The Jimma Infant Survival Data</span>**
+
+- A follow-up study of newborn infants in Southwest Ethiopia.
+- Wide ranges of data were collected on the following characteristics:
+  - Basic demographic information.
+  - Feeding practice.
+  - Anthropometric measurements.
+
+- Infants were followed for 12 months.
+- Measurements were taken at seven time points from each child.
+
+```{r, warning=FALSE, message=FALSE}
+library(readxl)
+Infant <- read_xls("Data/Infant.xls")
+Infant$sex <- factor(Infant$sex, levels= c(1, 0), labels= c("male", "female"))
+```
+
+---
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
+library(dplyr)
+output <- table(Infant$age) %>%
+  as.data.frame() %>%
+  mutate(Time = as.numeric(as.character(Var1)),
+         N = Freq,
+         Percentage =round((Freq/Freq[1])*100,1)) %>%
+  select(Time, N, Percentage)
+print(output)
+```
+
+.pull-left[
+```{r, warning=FALSE, message=FALSE, echo=F}
+library(dplyr)
+output <- table(Infant$age) %>%
+  as.data.frame() %>%
+  mutate(Time = as.numeric(as.character(Var1)),
+         N = Freq,
+         Percentage =round((Freq/Freq[1])*100,1)) %>%
+  select(Time, N, Percentage)
+print(output)
+```
+]
+
+.pull-right[
+- Infants were followed during 12 months.
+- Measurements were taken at seven time points from each child, resulting in a maximum of seven measurements per subject.
+- For our purpose, we will consider the variable weight. 
+- Due to a variety of reasons, 80.7% continues up to the end of the study.
+]
+
+---
+
+**<span style="color:blue">The Income Dynamics (PSID) Study</span>**
+
+- The Panel Study of Income Dynamics (PSID) began in 1968 and is still continuing.
+- It is the longest-running longitudinal household survey in the world.
+- The PSID is a longitudinal study of a representative sample of U.S. individuals.
+- The data that represents a small subset of this data (1661 observations) is available in R software under the library "faraway".
+- Variables included in the dataset: Age, Education (years of education), Sex, and Annual Income.
+
+**The Question of Interest**
+
+The PSID dataset raises the following questions:
+
+- Is there a change in income over the years?
+- Is there variation in income by sex?
+
+---
+
+**PSID: Profile Plots for 20 Subjects**
+
+```{r, warning=FALSE, message=FALSE, fig.height=4, fig.align='center'}
+library(faraway);library(lattice)
+data(psid)
+mypsid<-subset (psid, (subset=(person <4)))
+mypsid1<-subset(mypsid, (subset=(year < 75)))
+xyplot(income ~ year , psid, type="l", subset=( person < 20),strip=TRUE)
+```
+
+- In the PSID dataset, some individuals have a slowly increasing income, while others have more erratic incomes.
+- There is small variation at the beginning compared to the end.
+- Income may possibly vary by sex, so we may need profile plots by sex.
+
+---
+
+**PSID: Profile of Income by Sex**
+
+```{r, warning=FALSE, message=FALSE,fig.width=8, fig.height=5, fig.align='center'}
+xyplot(income ~ year | sex, psid, type="l", subset=( person < 500),strip=TRUE)
+```
+
+- The variation for males is higher than that of females.
+- Income data for males is more erratic.
+- Variation at the beginning is smaller than the variation at the end for both groups.
+
+---
+
+**<span style="color:blue">Orthodontic Growth Data**
+
+- Taken from Potthoff and Roy, Biometrika (1964).
+
+- The distance from the center of the pituitary to the maxillary fissure was recorded at ages 8, 10, 12, and 14, for 11 girls and 16 boys.
+
+- Data were collected by orthodontists from x-rays of the children’s skulls.
+
+- 108 total records were grouped into 27 groups by Subject.
+
+- This is an example of balanced repeated measures data, with a single level of grouping (Subject).
+
+- Research question: Is dental growth related to gender?
+
+---
+
+**The Orthodontic Growth Data: Individual Profiles by Sex**
+
+```{r, warning=FALSE, message=FALSE, fig.height=4, fig.align='center'}
+library(readr); library(dplyr)
+growth <- read_csv("Data/growth2.csv") 
+  growth$age <- as.factor(growth$age); 
+  growth$Sex <- factor(growth$sex, levels= c(1, 2), labels= c("male", "female"))
+ growth %>%  xyplot(measure ~ age|Sex, data = ., groups = ind, type = "l",
+         xlab ="age",ylab= "distance")
+```
+
+- Much variability between children and considerable variability within children.
+- Fixed number of measurements per subject and measurements taken at fixed time points.
+
+---
+
+**The Orthodontic Growth Data: Mean Distance Profile by Sex**
+
+```{r, fig.align='center', fig.height=4.5}
+mean1<-tapply(growth$measure, growth$age, mean)
+age1<-as.numeric(unique(growth$age)) %>% sort()
+plot(age1, mean1, type="l",ylim=c(20,30), xlab="age", ylab=" The mean distance", 
+     lwd=3, main=" The mean profile of the growth data set")
+```
+
+- The relationship between age and distance appears to be linear.
+
+- It appears that there is a linear growth pattern.
+
+
+---
+
+#### Cross-sectional versus longitudinal data
+
+Cross-sectional data and longitudinal data are two primary types of data used in statistical analysis:
+
+- Cross-sectional data: Collected at a specific point in time and involves observations of different individuals at that particular time.
+
+- Longitudinal data: Collected over an extended period, involving repeated observations of the same individuals over time.
+
+---
+
+#### t-test example
+
+**Diastolic Blood Pressures (DBP) from the Captopril Data**
+
+- Consider the DBP.
+
+- It includes 15 patients with hypertension.
+
+- The response of interest was the supine blood pressure before and after treatment with CAPTOPRIL.
+
+- Research question: <span style="color:red">How does treatment affect BP?</span>
+
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+before <- c(130, 122, 124, 104, 112, 101, 121, 124, 115, 102, 98, 119, 106, 107, 100)
+after <- c(125, 121, 121, 106, 101, 85, 98, 105, 103, 98, 90, 98, 110, 103, 82)
+data <- data.frame( group = rep(c("Before", "After"), each = 15),
+  dbp = c(before, after))
+paired <- data %>% group_by(group) %>%summarize(Mean = mean(dbp),  N = n(),
+      Std_Deviation = sd(dbp), Std_Error_Mean = sd(dbp)/sqrt(n()))
+print(paired)
+```
+
+- Paired data analysis: Examines related variables within the same subjects.
+- DBP: Analysed before and after treatment.
+- Average decrease: More than 9 mmHg after treatment.
+- Classical analysis: Compares measurements within each subject/participant.
+$d_i = Y_{i1}-Y_{i2}, i = 1, 2, ..., 15$
+- Focus: Changes from before to after treatment.
+- Testing for treatment effect: Assesses if the average difference equals zero.
+- Paired observations: The simplest case of longitudinal data
+- Much variability between subjects
+
+---
+
+
+#### Unpaired, two sample t-test
+
+- What if we had ignored the paired nature of the data?
+- We then could have used a two sample (unpaired) t test to compare the average BP of untreated patients (controls) with treated patients.
+- We would still have found a significant difference (p= 0.0377), but the p value would have been more than 30 30×larger compared to the one obtained using the paired t test (p=0.001).
+
+
+Conclusion:
+- The two sample t test does not take into account the fact that the 30 measurements are not independent observations.
+- Illustration: classical statistical models which assume independent observations will not be valid for the analysis of longitudinal data
+
+---
+
+#### Cross-sectional vs longitudinal data
+
+- Cross-sectional data refers to the data collected at a specific point in time.
+- Observations from cross-sectional data are uncorrelated.
+- Longitudinal data refers to measurements made repeatedly over time to study how the subjects/patients/participants evolve over time.
+ - That means the concern of longitudinal data analysis is change over time.
+- In longitudinal study, the measurements made for participants over a period of time are correlated.
+- Suppose it is of interest to study the relation between some response Y and age.
+- A cross-sectional study yields the following data:
+
+```{r, out.width='38%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/Y_age.png")
+```
+- Graph suggesting a negative relation between Y and age
+
+---
+
+#### Cross-sectional vs longitudinal data
+
+- Exactly the same observations could also have been obtained in a longitudinal study, with 2 measurements per subject.
+- First case:
+```{r, out.width='55%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/cross_sec.png")
+```
+- Graph suggesting a negative cross-sectional relation but a positive longitudinal trend
+
+---
+
+#### Cross-sectional vs longitudinal data
+
+- Second case:
+```{r, out.width='55%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/logitu.png")
+```
+- Graph suggesting the cross-sectional as well as longitudinal trend to be negative.
+  
+- **Conclusion:** Longitudinal data allow distinguishing differences between subjects from changes within subjects.
+
+---
+
+#### Longitudinal data: wide/broad form
+
+.pull-left[
+- Wide format of data
+
+| Subject | Time 1 (y) | Time 2 (y) | Time 3 (y) | Time 1 (x) | Time 2 (x) | Time 3 (x) |
+| ------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- |
+| 1       | 10         | 6          | 6          | 4          | 4          | 4          |
+| 2       | 7          | 5          | 3          | 2          | 2          | 2          |
+| 3       | 12         | 9          | 8          | 6          | 6          | 6          |
+| 4       | 11         | 14         | 16         | 8          | 8          | 8          | 
+
+
+- 
+```{r, eval=FALSE}
+# Using pivot_wider 
+wide_data <- long_data %>%
+  pivot_wider(names_from = Time, 
+              values_from = c(y, x))
+```
+]
+
+.pull-right[
+
+- Long format of data
+
+subject | time | y | x
+------- | ---- | - | -
+1 | 1 | 10 | 4
+1 | 2 | 6 | 4
+1 | 3 | 6 | 4
+2 | 1 | 7 | 2
+2 | 2 | 5 | 2
+2 | 3 | 3 | 2
+3 | 1 | 12 | 6
+3 | 2 | 9 | 6
+3 | 3 | 8 | 6
+4 | 1 | 11 | 8
+4 | 2 | 14 | 8
+4 | 3 | 16 | 8
+]
+
+
+
+---
+
+#### Longitudinal data
+
+- With LD: multiple measurements taken on each subject.
+- You not only can examine the differences between subjects, but you can also examine the change within subjects across time.
+- The number of observations is not the number of subjects but rather the number of measurements taken on all the subjects.
+- There are three repeated measurements on each subject, you now have 12 observations.
+- How does this change your variance-covariance matrix?
+
+---
+
+#### Variance-covariance matrix for longitudinal data
+
+```{r, out.width='55%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/vcov.png")
+```
+
+- 3 repeated measurements on each subject:
+  - We now have 12 observations and a 12x12 variance-covariance matrix.
+- For a simple longitudinal model, the matrix is a block-diagonal matrix.
+- The matrix is a block-diagonal matrix:
+  - Observations within each block are assumed to be correlated.
+  - Observations outside of the blocks are assumed to be independent (subjects are still assumed to be independent of each other).
+
+---
+
+#### Introduction to longitudinal data analysis
+
+**<span style="color:purple">Longitudinal data:</span>** data in the form of repeated measurements over time or other factors on each individual or unit in a sample from a population of interest.
+
+Examples:
+- Weekly measurements of growth on experimental plots with different fertilizers.
+- Monthly measurements of viral load on HIV-infected patients with different treatment regimens.
+
+**Defining Characteristic**
+
+The same response or outcome is measured repeatedly on each unit.
+
+**Scientific Questions**
+
+- How mean response differs across treatments or other factors.
+- How the change in mean response over time differs.
+- Other features of the relationship between response/outcome and time.
+
+---
+
+#### Required statistical model
+
+A statistical model that acknowledges this data structure in which the questions can be formalized and associated specialized methods of analysis based on the model.
+
+- Longitudinal data/studies have become increasingly common and widespread across various scientific disciplines.
+
+**Terminology**
+
+- Longitudinal data refers to data in the form of repeated measurements that might be over time but could also be over some other set of conditions.
+- Time is most often the condition of measurement.
+- "Response" and "outcome" are used interchangeably to denote the repeated measurement or outcome of interest.
+- "Participant", "Unit", "individual" and "subject" are used interchangeably to refer to the entity being measured.
+
+**Applications**
+
+We consider several applications that exemplify longitudinal data situations and the range of ways data are collected and types of responses and questions of interest.
+
+---
+
+#### Simple methods
+
+-	Introduction 
+ - Overview of frequently used methods
+-	Summary statistics
+- Practical using R
+
+
+---
+
+#### Simple methods: introduction
+
+- The reason why classical statistical techniques fail in the
+context of longitudinal data is that observations within participants
+are correlated.
+
+  - often the correlation between two repeated measurements decreases as
+the time span between those measurements increases
+
+- The paired t-test accounts for this by considering participant
+specific differences $∆_i = Y_{i1} − Y_{i2}$
+
+ - This reduces the number of measurements to just one per participant, which
+implies that classical techniques can be applied again.
+
+---
+
+#### Overview of frequently used methods
+
+- In the case of more than 2 measurements per participant, similar simple techniques are often applied to reduce the number of measurements for the $i^{th}$ participant, from $n_i$ to $1$.
+
+**Some Examples:**
+
+- Analysis at each time point separately
+
+- Analysis of Area Under the Curve (AUC)
+
+- Analysis of endpoints
+
+- Analysis of increments
+
+- Analysis of covariance
+
+---
+
+#### Sesame data
+
+- Cross-year by locations trial of sesame genotypes
+
+- Sesame is a short day plant & sensitive to photo-period, temperature, and moisture stress.
+
+- The yield is reported to vary across years and locations.
+
+- Variation in rainfall could lead to the change of yield across locations.
+
+- The study area was characterized by uni-modal rainfall pattern 
+   - low in amount, short in duration, and poor in distribution within a short distance.
+
+- To examine the effect of Genotype X Environment Interaction, 13 genotypes were tested across three locations over three years.
+
+- Aim: to see the change in yield of different genotypes over years.
+
+---
+
+#### The sesame Data
+
+```{r, out.width='45%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/sesame_prof.png")
+```
+- Three years average yield over the three locations by thirteen genotypes
+- Sesame Data: Profile plot by Year and Location
+
+---
+
+#### Sesame Data: Profile plot by Year and Location
+
+.pull-left[
+```{r, out.width='100%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/sesame_area.png")
+```
+]
+
+.pull-right[
+
+- Fixed # of measurements per genotypes
+
+- It seems that the yield on the first year is >> yield on the $2^{nd}$ year for the majority of the observations.
+
+- Some lines on the plot show an increasing trend
+
+- Some genotypes have a larger yield than others
+
+- Variability between genotypes
+
+- Variability within genotypes
+
+- May be it is good to see the mean profile plot by location
+]
+
+---
+
+#### Mean profile of sesame yield by location
+
+```{r, out.width='45%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/sesame_mean.png")
+```
+- Area2: the mean yield is almost constant over time
+
+- Area1 & Area3: the mean yield decrease from Yr 1 to Yr 2 and then increase to Yr 3.
+
+---
+
+#### Overview of frequently used methods
+
+#### 1. Analysis at each time point separately
+
+- The data are analysed at each occasion separately.
+
+- Example: Use the sesame data set to analyze the number of days to maturity using one-sample t-test for each location at each time point.
+
+
+```{r, out.width='90%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/fig14.png")
+```
+
+---
+
+**Summary of Days to Maturity**
+
+- A simple summary of days to maturity for each location at a given time point.
+
+- Comparison of different locations for year 1.
+
+- Performed two-sample t-test, despite having three locations.
+
+
+```{r, out.width='80%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/fig15.png")
+```
+- Problem of multiple testing since multiple t-tests are used!
+
+---
+
+#### Why is multiple testing problem?
+
+- Multiple testing: Conducting multiple t-tests leads to inflation of Type I error.
+
+- Experiment-wise Type I error rate: Probability of falsely rejecting at least one null hypothesis among multiple tests.
+
+- $\alpha = 5\% \Longrightarrow$ one trial in 20 will falsely claim that a difference exist when there is none
+
+- Let’s consider a case where you have 20 hypotheses to test at a significance level of 0.05.
+
+- Prob . at least one sig. result (experiment wise Type I error rate) $= 1−(1−\alpha)^{20} = 0.64$ 
+- $\Longrightarrow$ with 20 tests being considered, we have a 64% chance of observing at least one significant result, even if all of the tests are actually not significant
+
+---
+
+#### Experiment wise Type I Error
+
+
+| # of Comparisons (K) | Experiment-wise Type I Error |
+|---------------------|-----------------------------|
+|         1           |             0.05            |
+|         2           |            0.0975           |
+|         3           |            0.1426           |
+|         5           |            0.2262           |
+
+- With 5 tests at 5% significance level, there's a 22.6% chance of observing at least one significant result even if all tests are not significant.
+
+- If 3 comparisons are performed at 5%, the overall significance will be increased more that 14%
+- Increasing the number of comparisons also increases the overall significance.
+
+---
+
+#### Experiment-wise Type I Error
+
+**Advantages of Analysis at Each Time Point**
+
+- Simple to interpret.
+- Uses all available data.
+
+**Disadvantages of Analysis at Each Time Point**
+
+- Does not consider overall differences.
+- Does not allow studying evolutionary differences.
+- Problem of multiple testing.
+- Possible issues with missing data.
+
+
+---
+
+#### Analysis of Area Under the Curve (AUC)
+
+- For each participant, the area under its curve is calculated:
+$$AUC_i=(t_{i2}-t_{i1})*(y_{i2}-y_{i1})/2+(t_{i3}-t_{i2})*(y_{i3}-y_{i2})/2+ ...$$
+
+- Afterwards, these $AUC_i$ are analyzed
+
+- Ex: we use the days to CFU data to calculate the area under the curve.
+
+##### Advantages
+
+- no problems of multiple testing
+- does not explicitly assume balanced data
+- compares ‘overall’ differences
+
+##### Disadvantage
+
+- uses only partial information: $AUC_i$
+- participants could have the same AUC but completely different profiles
+- possible problems with missing data
+
+
+---
+
+#### Analysis of endpoints 
+
+- General Idea : Assess differences only on the last time point
+
+- In randomised studies, there are no systematic differences at baseline.
+
+- Hence, ‘treatment’ effects can be assessed by only comparing the measurements at the last occasion
+
+##### Advantages
+- no problems of multiple testing
+- does not explicitly assume balanced data
+
+##### Disadvantages
+- uses only partial information
+- only valid for large data sets
+- the last time point must be the same for all participants
+- does not consider ‘overall’ differences
+- possible problems with missing data
+
+---
+
+#### Analysis of increments
+
+- A simple method to compare evolutions between participants,
+correcting for differences at baseline, is to analyze the
+participant-specific changes: $y_{in_i}-y_{i1}$
+
+
+##### Advantages
+- no problems of multiple testing
+- does not explicitly assume balanced data
+
+##### Disadvantage
+- uses only partial information
+- the last time point must be the same for all participants
+- possible problems with missing data
+
+---
+
+#### Analysis of covariance
+
+- Another way to analyse endpoints, correcting for differences at baseline, is to use analysis of covariance techniques, where the first measurement is included as covariate in the model.
+
+##### Advantages:
+
+- no problems of multiple testing
+- does not explicitly assume balanced data
+
+##### Disadvantages:
+- uses only partial information: $y_{i1}$ and $y_{in_i}$
+- does not take into account the variability of $y_{i1}$ 
+
+---
+
+#### Summary Statistics
+
+- The AUC, endpoints and increments are examples of summary statistics. 
+   
+   - Such summary statistics summarise the vector of repeated
+measurements for each participant separately.
+
+- This leads to the following general procedure:
+   - Step 1: Summarize data of each participant into one statistic, a
+summary statistic
+   - Step 2: Analyze the summary statistics, e.g. analysis of covariance
+to compare groups after correction for important covariates
+
+- This way, the analysis of longitudinal data is reduced to the analysis of independent observations, for which classical statistical procedures are available.
+
+- These techniques are based on extensions of simple regression
+models for univariate data
+
+---
+
+- However, all these methods have the disadvantage that (lots of) information is lost
+- Further, they often do not allow to draw conclusions about the way the endpoint has been reached
+
+```{r, out.width='50%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/fig8.png")
+```
+
+- This has led to the development of statistical techniques that overcome
+these disadvantages
+
+
+---
+
+### <span style="color:red">Exploratory data analysis</span>
+
+##### Introduction
+
+Exploratory analysis comprises techniques to visualize patterns in the data.
+
+Data analysis must begin by making displays that expose patterns relevant to the scientific question.
+
+A linear mixed model makes assumptions about:
+- <span style="color:blue;">mean structure</span>: (non-)linear, covariates, ...
+- <span style="color:blue;">variance function</span>: constant, quadratic, ...
+- <span style="color:blue;">correlation structure</span>: constant, serial, ...
+- <span style="color:blue;">subject-specific profiles</span>: linear, quadratic, ...
+
+In practice, linear mixed models are often obtained from a two-stage model formulation.
+
+However, this may or may not imply a valid marginal model.
+
+---
+
+#### Exploratory data analysis.... (2)
+
+Longitudinal data analysis, like other statistical methods, has two components which operate side by side:
+- exploratory and
+- confirmatory analysis.
+
+Exploratory analysis comprises techniques to visualize patterns in the data.
+Confirmatory analysis is judicial work, weighing evidence in data for, or against hypotheses.
+
+Data analysis must begin by making displays that expose patterns relevant to the scientific question.
+
+The best methods are capable of uncovering patterns which are unexpected.
+
+In this regard graphical displays are so important. At this stage, the following guidelines are very useful.
+
+---
+
+#### Jimma infant data ... (1)
+
+Follow-up study of newborn infants in Southwest Ethiopia.
+
+Wide ranges of data were collected on the following characteristics:
+- basic demographic information,
+- feeding practice,
+- anthropometric measurements, ...
+
+Infants were followed during 12 months.
+Measurements were taken at seven time points every two months from each child.
+Weight was one of the variables recorded at each visit.
+
+Research question: <span style="color:red;">How does weight change over time?</span>
+---
+
+#### Jimma infant data ... (2)
+
+The individual profiles support a <span style="color:purple;">random-intercepts model</span>
+
+```{r, warning=FALSE, message=FALSE, fig.align='center', fig.height=5}
+attach(Infant); library(lattice)
+mydata1<-as.data.frame(Infant)
+xyplot(weight ~ factor(age), group = ind, lty=1 ,  
+       data =mydata1[sample(nrow(mydata1), 800),], main="a. Individual profile plot",
+       xlab = "Time", ylab = "Weight in kg", type = "a", lines = TRUE)
+```
+
+
+---
+
+#### Conclusions from the profile
+
+- Much <span style="color:blue;">variability between children</span>
+
+- Considerable <span style="color:blue;">variability within subjects</span>
+
+- Fixed number of measurements per subject
+- Measurements taken at fixed time points
+
+---
+
+#### Mean profile
+
+The mean profile can be plotted using the following R code:
+
+```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=4.5, fig.align='center'}
+mean1<-tapply(Infant$weight, Infant$age, mean, na.rm=T)
+age1<-as.numeric(unique(Infant$age))
+plot(age1, mean1, type = "l", xlab = "Age", ylab = "Mean Weight", lwd = 2, 
+     main = "The Mean Profile")
+
+```
+
+---
+
+#### Mean profile by sex
+
+- The mean profiles by sex:
+```{r, message=FALSE, warning=FALSE, fig.width=7, fig.height=5, fig.align='center'}
+interaction.plot(Infant$age, sex, Infant$weight, fun = mean, 
+                 col = c("red", "blue"), xlab = "Age", ylab = "Weight", las = 1)
+```
+
+---
+
+#### Exploring the <span style="color:blue">random effects</span>
+
+- The mean structure for linear mixed effect model can be determined based on the <span style="color:red">random effects</span>.
+
+- Choosing which parameters in the model should have a <span style="color:red">random-effect</span> component included to account for between-group variation.
+
+- The <span style="color:purple">lmList</span> function and the methods associated with it are useful for this.
+
+- Continuing with the analysis of the <span style="color:blue">Jimma infants</span> data, we see from the individual profiles of these data that a simple linear regression model of <span style="color:red">weight</span> as a function of <span style="color:red">age</span> may be suitable.
+
+---
+
+#### Jimma infant survival
+
+-The data was fitted this for each subject as follows:
+```{r, message=FALSE, warning=FALSE}
+library(nlme)
+fit <- lmList(weight ~ age | ind, Infant)
+fit
+```
+The formula weight ~ age | ind specifies that we want to model the weight of infants as a function of age, with random intercepts for each individual (ind). This allows us to account for individual variation in weight trajectories over time. 
+---
+
+#### Exploring the random effects
+
+- The <span style="color:blue">main purpose</span> of this preliminary analysis is to give an indication
+  of <span style="color:blue">what random effects structure</span> to use in the model.
+- We must decide which random effects to include in a model for the
+  data, and <span style="color:blue">what covariance structure</span> these random effects should have.
+
+- Objects returned by <span style="color:purple">lmList</span> are of class <span style="color:purple">lmList</span>, for which several
+  display and plot methods are available.
+- The <span style="color:purple">pairs method</span> provides one view of the random effects covariance
+  structure.
+- To identify outliers-points outside the estimated probability contour
+  at <span style="color:red">level $1-\alpha/2$</span> will be marked in the plot, we use the R function.
+
+- We see that <span style="color:red">subject 29</span> has high slope.
+
+---
+
+#### Exploring the correlation structure
+
+- In longitudinal data analysis we model two key components of the data:
+  - <span style="color:blue">Mean structure</span>
+  - <span style="color:blue">Correlation structure</span> (after removing the mean structure)
+
+- Modelling the correlation is important to be able to obtain correct inferences on regression coefficients.
+
+- Correlation can be formulated in terms of:
+  - **<span style="color:purple">Random effects</span>**
+  - **<span style="color:purple">Autocorrelation</span>** or serial dependence
+  - **<span style="color:purple">Noise, measurement error</span>**
+
+- After we explore the mean function in the regression, we need to explore the <span style="color:red">correlation structure for the residuals</span>, taking away the mean trend effect.
+---
+
+#### Observed variance for jimma dataset
+
+- Having an appropriate model for studying the evolution of the variance is a very important step in the modeling approach.
+- The observed variance shows an increase in variability over time.
+- Hence, a <span style="color:blue">heterogeneous variance structure</span> may be a good starting point.
+- Moreover, the variability for <span style="color:red">males and females</span> seems to be more or less the same.
+- Hence, the <span style="color:purple">same variance structure</span> may be assumed for both groups.
+
+```{r, message=FALSE, fig.align='center', fig.height=4}
+interaction.plot(Infant$age, sex, Infant$weight, fun=var, col=2:3, xlab="age", 
+                 ylab="var[wt]", las=1)
+```
+
+---
+
+#### <span style="color:blue">Growth data</span>
+
+- The distance from the center of the pituitary to the maxillary fissure was recorded at ages <span style="color:red">8, 10, 12, and 14</span>, for <span style="color:purple">11 girls</span> and <span style="color:purple">16 boys</span>.
+
+**<span style="color:blue">Research Question:</span>** Is dental growth related to **<span style="color:red">gender</span>?**
+
+- The individual profiles support a <span style="color:red">random-intercepts model</span>.
+
+```{r, message=FALSE, warning=FALSE, fig.align='center', fig.height=4}
+xyplot(measure ~ factor(age) | sex, group = ind, data = growth, 
+       main="Individual profile plot by sex",xlab = "Age", ylab = "measure", 
+       type = "a", lines = TRUE)
+```
+
+---
+
+From the exploratory analysis:
+- Mean structure seems <span style="color:red">linear</span> over time.
+- Variability between subjects at baseline.
+- Variability between subjects in the way they evolve.
+
+Hence, a linear mean with <span style="color:red">random intercept and slope</span> is a good idea...
+---
+
+#### <span style="color:blue">Exploring the mean structure of growth data</span>
+
+For balanced data, averages can be calculated for each occasion separately, and standard errors for the means can be added.
+```{r, message=FALSE, warning=FALSE, fig.align='center', fig.height=5}
+attach(growth)
+mean1<-tapply(measure, age, mean)
+age1<-sort(as.numeric(unique(age)))
+plot(age1, mean1, type= "l",ylim=c(20,30), xlab="age", ylab=
+" The mean distance", lwd=3, main="The mean profile")
+```
+
+- Data exploration is therefore extremely helpful as additional tool in the selection of appropriate models.
+
+---
+
+```{r, warning=FALSE, message=FALSE}
+##### R-code for Correlation matrix ####
+d1<-measure[age==8]
+d2<-measure[age==10]
+d3<-measure[age==12]
+d4<-measure[age==14]
+response1<-cbind(d1, d2, d3, d4)
+cor_matrix <- cor(response1)
+cor_matrix
+```
+Scatter plot matrix for growth data
+
+---
+```{r, warning=FALSE, message=FALSE, fig.align='center', fig.height=5}
+# Scatter plot matrix
+panel.hist <- function(x, ...)
+{usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(usr[1:2], 0, 1.5) );  h <- hist(x, plot = FALSE)
+  breaks <- h$breaks; nB <- length(breaks)
+  y <- h$counts; y <- y/max(y)
+  rect(breaks[-nB], 0, breaks[-1], y, col="cyan", ...)}
+pairs(response1, panel=panel.smooth, cex = 1.5, pch = 16,  bg="light green",
+      diag.panel=panel.hist, cex.labels = 2, font.labels=2)
+```
+
+---
+
+```{r, message=FALSE, warning=FALSE, fig.align='center', fig.height=5}
+pmplots::pairs_plot(response1, y = c("d1", "d2", "d3", "d4"), col = "cyan")
+```
+
+---
+
+#### Exploring the Variability of the Observed Data
+
+- The individual profile plots of the growth data set exhibit substantial variability within and between subjects. 
+
+- This intricate variability can be further elucidated by considering the variance-covariance matrix of the observed data, as indicated below:
+
+
+- By examining the variance-covariance matrix, we gain deeper insights into the extensive variability present within and between subjects in the growth data set.
+
+**Covariance Matrix for Growth Data:**
+
+```{r}
+cov(response1)
+```
+
+---
+
+#### Exploring Overall Variability
+
+```{r, warning=FALSE, message=FALSE, fig.align='center', fig.height=5}
+## Mean evolution profile ##
+mean1<-tapply(measure, age, mean)
+age1<-sort(as.numeric(unique(age)))
+plot(sort(age1), mean1, type= "l",ylim=c(10,32), xlab="age", 
+     ylab=" The mean distance", lwd=3, main=" The mean profile")
+
+```
+
+---
+
+#### Variability by Group
+
+```{r, message=FALSE, warning=FALSE, fig.align='center', fig.height=5}
+interaction.plot(age, sex, measure, lty=c(1, 2), fun=var,
+                 ylab="Distance from Pituitary to Pterygomaxillary Fissure (mm)",
+                 xlab="Age", trace.label="Group")
+title(main="The Variance of the Growth Data Set by Sex")
+```
+
+---
+class: inverse, middle
+
+# Day 2
+### A Model for Longitudinal Data
+
+- Linear Mixed Models (LMM)
+- Hierarchical versus Marginal Model
+
+- Marginal Model: Estimation and Inference
+
+- Inference for the Random Effects
+
+---
+
+#### <span style="color:blue">Linear Mixed Models</span>
+
+- **<span style="color:purple">Linear mixed models (LMM)</span>** are models that handle data where observations are not independent.
+
+- That is, LMM correctly models correlated errors, whereas procedures in the general linear model family (GLM) usually do not.
+
+  - (GLM includes: t-tests, ANOVA, correlation, regression, and factor analysis, to name a few.)
+
+- LMM can be considered as a further generalization of GLM to better support the analysis of a continuous response.
+
+- Mixed models contain both fixed and random effects.
+
+- These models are useful in a wide variety of disciplines in the physical, biological, and economic sciences.
+
+- They are particularly useful in settings where repeated measurements are made on the same statistical units or where measurements are made on clusters of related statistical units.
+
+- Let us see some of the terms associated with mixed models.
+
+---
+
+#### Types of Effects in Linear Mixed Models
+
+**<span style="color:red"> Fixed Effects</span>**
+
+- **<span style="color:purple">Factors for which the only levels under consideration are contained in the coding of those effects.</span>**
+  - Example: **Sex** where both male and female genders are included in the factor, is considered a fixed effect.
+  - Example: **Agegroup** with levels "Minor" and "Adult" included in the factor is also considered a fixed effect.
+
+**<span style="color:red"> Random Effects </span>**
+
+- **<span style="color:purple">Factors for which the levels contained in the coding of those factors are a random sample of the total number of levels in the population for that factor.</span>**
+  - Example: **Subject** can be considered a random effect if it represents a random sample of the target population.
+
+- Random effects models allow researchers to make inferences over a wider population in Linear Mixed Models (LMM) than would be possible with Generalized Linear Models (GLM).
+
+---
+
+**<span style="color:red"> Hierarchical Effects</span>**
+
+- **<span style="color:purple">Hierarchical designs have nested effects.</span>**
+  - Nested effects are those with subjects within groups. For instance, in a medical study, "Patients" may be nested within "Doctors," and "Doctors" may, in turn, be nested within "Hospitals."
+  - We can have a hierarchical effect when the predictor variables are measured at more than one level (ex., reading achievement scores at the student level and teacher-student ratios at the school level).
+
+- Considering hierarchical effects in Linear Mixed Models allows researchers to account for the nested structure of the data and make more accurate inferences about the relationships between variables at different levels of the hierarchy.
+
+---
+
+#### In Practice: Handling Unbalanced Data
+
+- Often, data is unbalanced:
+  - Unequal number of measurements per subject
+  - Measurements not taken at fixed time points
+
+- As a result, traditional multivariate regression techniques may not be applicable.
+
+#### Subject-Specific Profiles
+
+- Subject-specific longitudinal profiles can be well approximated by linear regression functions.
+
+- A 2-stage model formulation is common:
+ 
+  1. **Stage 1**: Linear regression model for each subject separately.
+ 
+  2. **Stage 2**: Explaining variability in subject-specific regression coefficients using known covariates.
+
+---
+
+#### Stage 1 Model
+
+$$Y_{i} = Z_{i}\beta_{i} + \varepsilon_{i}$$
+
+- $Y_{i} = (Y_{i1}, Y_{i2}, ..., Y_{in_i})'$
+
+- $Z_{i}$ is a $n_i \times q$ matrix of known covariates.
+
+- $\beta_{i}$ is a $q$ dimensional vector of subject-specific regression coefficients.
+
+- $\varepsilon_{i} \sim \color{blue}{N(0, \Sigma_{i})}$.
+
+- Often, $\Sigma_{i} = \color{blue}{\sigma^2 I_{N_{i}}}$.
+
+- This model describes the observed variability within subjects.
+
+---
+
+#### A 2-stage Model 
+
+- Between-subject variability can now be studied by relating the $\beta_{i}$ to known covariates.
+
+- **Stage 2 model**: 
+$$\beta_{i} = K_{i}\beta + b_{i}$$
+
+  - $K_{i}$ is a $q \times p$ matrix of known covariates.
+
+  - $\beta$ is a $p$-dimensional vector of unknown parameters.
+
+  - $b_{i} \sim \color{blue}{N(0, D)}$.
+  
+---
+
+#### The General Linear Mixed-effects Model
+
+- A 2-stage approach can be performed explicitly in the analysis.
+
+- However, this is just another example of the use of summary statistics.
+   - $Y_{i}$ is summarized by $\hat{\beta}_{i}$.
+   - Summary statistics $\hat{\beta}_{i}$ are analyzed in the second stage.
+
+- The associated drawbacks can be avoided by combining the two stages into one model:
+
+$$\begin{cases}
+    Y_{i} = Z_{i}\beta_{i} + \varepsilon_{i} \\
+    \beta_{i} = K_{i}\beta + b_{i}
+\end{cases}$$
+
+
+$$\Rightarrow Y_{i} = Z_{i}K_{i}\beta + Z_{i}b_{i} + \varepsilon_{i}$$ 
+$$= X_{i}\beta + Z_{i}b_{i} + \varepsilon_{i}$$
+
+---
+
+The model is given by:
+
+$$Y_i = \underset{\text{fixed effect}}{\underbrace{X_i \beta}} + \underset{\text{random effect}}{\underbrace{Z_i b_i}} + \varepsilon_i$$
+
+Where:
+
+$$
+\begin{cases}
+    b_i \sim N(0, D) \\
+    \varepsilon_i \sim N(0, \Sigma_i) \\
+    b_1, b_2, \ldots, b_N, \varepsilon_1, \varepsilon_2, \ldots, \varepsilon_N \,  are \, , independent
+\end{cases}
+$$
+
+**Terminology:**
+
+- Fixed effects: $\beta$
+- Random effects: $b_i$
+- Variance components: $D$ and $\Sigma_i$
+
+---
+
+- For Gaussian data, <span style="color: blue; font-weight: bold;">GLMM</span> extends the General Linear Model (GLM) by the addition of random effect parameters and by allowing a more flexible specification of the covariance matrix of the random errors.
+
+- <span style="color: blue; font-weight: bold;">GLM</span>: $Y_i = X_i\beta + \epsilon_{i}$
+  - <span style="color: blue; font-weight: bold;">GLM</span> includes t-tests, analysis of variance (ANOVA), correlation, regression, and factor analysis, etc.
+
+- <span style="color: blue; font-weight: bold;">GLMM</span>: $Y_i = X_i\beta + Z_ib_i+ \epsilon_{i}$
+
+- Difference?
+
+- $\epsilon_{i}$
+  - <span style="color: blue; font-weight: bold;">GLM</span>: vector of random errors
+  - <span style="color: blue; font-weight: bold;">GLMM</span>: is no longer required to be independent and homogenous
+
+- <span style="color: blue; font-weight: bold;">Mixed Effects Models</span>
+  - Applicable to all types of outcomes (continuous, discrete)
+  - Can handle both time-variant and time-invariant covariates
+  - Robust to missing data (irregularly spaced observations)
+
+---
+
+- Contains both fixed and random effects
+
+$Y_i = X_i\beta+ Z_ib_i + \epsilon_i$
+
+```{r, out.width='80%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/fig12.png")
+```
+
+
+---
+
+#### Summary
+
+- LMM extends the GLM by the addition of random effect parameters and by allowing a more flexible specification of the covariance matrix of the random errors
+
+- LMM can easily fitted to longitudinal data
+
+- Estimation is more difficult in mixed models than GLM
+
+- Longitudinal models have three sources of variation
+
+ - between subject variability/represented by random effect
+ 
+ - Within subject variability/represented by serial correlation
+ 
+ - Measurement error
+
+
+---
+
+#### Source of random variation
+
+- $Y_i = X_i\beta + Z_i b_i + \epsilon_i$
+- $Y_i = X_i\beta + Z_i b_i + \epsilon_{(1)i} + \epsilon_{(2)i}$
+
+**3 stochastic components:**
+
+- $b_i$: <span style="color: blue;">between-participant variability</span>
+- $\epsilon_{(1)i}$: <span style="color: blue;">measurement error</span>
+- $\epsilon_{(2)i}$: <span style="color: blue;">serial correlation component</span>
+
+**Random effects (variation between participants)**
+
+- <span style="color: blue;">Characteristics of individual participants</span>
+- For example, <span style="color: blue;">intrinsically high or low responders</span>
+
+**Serial correlation (variation over time within participants)**
+
+- Measurements taken close together in time are <span style="color: blue;">strongly correlated</span> than those taken further apart in time
+- On a sufficiently small scale, this kind of structure is <span style="color: blue;">almost inevitable</span>
+
+**Measurement error**
+
+- <span style="color: blue;">Extra component of measurement error</span> reflecting variation added due to the measurement process.
+
+---
+
+#### Model Families
+
+- <span style="color: blue;">Marginal (population average) models</span>
+
+- <span style="color: blue;">Subject specific models</span>
+
+- <span style="color: blue;">Conditional models</span>
+
+Each can be 
+
+- <span style="color: blue;">Random intercept model</span>
+
+- <span style="color: blue;">Random slope model</span>
+
+- <span style="color: blue;">Random higher order model</span>
+
+
+---
+
+#### Model families
+
+<span style="color: blue;">Marginal (population average) models</span>
+
+- Responses are marginalized over all other responses
+- Parameters characterize the marginal expectation
+
+<span style="color: blue;">Subject specific models</span>
+
+- If the aim is to study how subjects change overtime & what characteristics influence such changes
+- Subject specific models differ from marginal models by the inclusion of parameters specific to the subject
+
+<span style="color: blue;">Conditional models</span>
+
+- Any response within the sequence of repeated measures is modeled conditional upon the other outcomes
+- Parameters describe a feature of outcomes, given values for the other outcomes (Cox 1972) i.e. log linear models
+
+
+
+---
+
+#### 1. Random intercept model 
+
+$$\begin{cases}
+    Y_{ij} = \beta_0 + \beta_1t_{ij} + \color{blue}{b_{0i}} + \epsilon_{ij}\\
+    b_{0i} \sim N(0,\sigma_b^2),  
+    \varepsilon_i \sim N(0, \sigma_{\epsilon}^2) \\
+    b_{0i}, \varepsilon_{ij} \,  are \, \, independent
+\end{cases}$$
+- Each subject has his/her own intercept: $\color{blue}{\beta_0 + b_{0i}}$
+
+- Interparticipant variability at **baseline**
+
+- Slope remains the same: $\color{blue}{\beta_1}$
+
+- Fixed effects can be added to the model
+
+**Conditional distribution:**
+
+- Take $\color{blue}{E(Y/b)}$ and $\color{blue}{Var(Y/b)}$
+
+ - $\color{red}{E(Y_{ij}/b_{0i}) = \beta_0 + \beta_1t_{ij} + b_{0i}}$
+ 
+ - $\color{red}{Var(Y_{ij}/b_{0i}) = \sigma^2_{\epsilon}}$
+ 
+ - $\color{red}{Y_{ij}/b_{0i}\sim N(\beta_0 + \beta_1t_{ij} + b_{0i}, \sigma^2_{\epsilon})}$
+
+---
+
+#### 1. Random intercept model 
+
+$$\begin{cases}
+    Y_{ij} = \beta_0 + \beta_1t_{ij} + \color{blue}{b_{0i}} + \epsilon_{ij}\\
+    b_{0i} \sim N(0,\sigma_b^2),  
+    \varepsilon_i \sim N(0, \sigma_{\epsilon}^2) \\
+    b_{0i}, \varepsilon_{ij} \,  are \, \, independent
+\end{cases}$$
+**Marginal distribution (marginal over the random intercepts):**
+
+- Take $\color{blue}{E(Y_{ij})}$ and $\color{blue}{Var(Y_{ij})}$
+
+ - $\color{red}{E(Y_{ij}) = \beta_0 + \beta_1t_{ij}}$
+ 
+ - $\color{red}{Var(Y_{ij}) = \sigma_{b}^2 + \sigma_{\epsilon}^2}$
+ 
+ - $\color{red}{Y_{ij}\sim N(\beta_0 +\beta_1t_{ij}, \sigma_b^2 + \sigma_{\epsilon}^2)}$
+
+
+---
+
+#### The random intercept model: ICC
+
+- Measurements from the same participant share a random effect:
+  - Means that marginally, there is a <span style="color: blue;">correlation structure</span>
+  
+
+- Let's consider two measurements from the same participant:
+  
+  - $Y_{ij}$ and $Y_{ik}$, $j\neq k$
+  
+  - $Cov(Y_{ij},Y_{ik}) = \sigma_b^2$
+
+
+- <span style="color: blue;">Correlation between two measurements from the same participant:</span>
+
+$$Cov(Y_{ij},Y_{ik}) = \frac{\sigma_b^2}{\sigma_b^2 + \sigma_{\epsilon}^2}$$
+
+---
+
+#### 2. Random Slope Model
+
+.pull-left[
+$$\begin{cases}
+    Y_{ij} = \beta_0 + \beta_1t_{ij} + \color{blue}{b_{0i}+ b_{1i}t_{ij}} + \epsilon_{ij}\\
+    b_{0i}, b_{1i} \sim N(0, D),  
+    \varepsilon_i \sim N(0, \sigma_{\epsilon}^2) \\
+    \epsilon_{ij} \, independent \ of \ b_{0i}, b_{1i}
+\end{cases}$$
+]
+.pull-right[
+$$D = \begin{pmatrix} \sigma_{0}^2 & \sigma_{01} \\\\ \sigma_{10} & \sigma_{1}^2 \end{pmatrix}$$
+]
+
+- Each subject has his/her own intercept: $\color{blue}{\beta_0 + b_{0i}}$
+- Each subject has his/her own slope: $\color{blue}{\beta_1 + b_{1i}}$
+- Allows the profiles to cross each other
+- Fixed effects can be added to the model.
+
+- This model has two random effects: $\color{blue}{b_{0i}}$ and $\color{blue}{b_{1i}}$
+
+- Their covariance $\color{blue}{\sigma_{10} = \sigma_{01}:}$
+
+  - If positive: subjects higher at baseline also have a <span style="color: blue;">higher evolution</span>
+  - If negative: subjects higher at baseline have a <span style="color: blue;">slower evolution</span>
+
+---
+
+#### 2. Random Slope Model
+
+- If the covariance $\color{blue}{\sigma_{10} = \sigma_{01}}$ is not restricted:
+  - It is called <span style="color: red;">unstructured</span>.
+  
+**Conditional distribution:**
+
+- $E(Y_{ij} | b_{0i}, b_{1i}) = \beta_0 + \beta_1t_{ij} + b_{0i} + b_{1i}t_{ij}$
+- $Var(Y_{ij} | b_{0i}, b_{1i}) = \sigma_{\epsilon}^2$
+
+**Marginal distribution:**
+
+- $E(Y_{ij}) = \beta_0 + \beta_1t_{ij}$
+- $Var(Y_{ij}) = \sigma_1^2 t_{ij} + 2\sigma_{01} t_{ij} + \sigma_{0}^2 + \sigma_{\epsilon}^2$
+
+- Note: <span style="color: blue;">marginal variance is a function of time</span>
+
+---
+
+#### The Random Slope Model: ICC
+
+- Let's consider two measurements from the same subject:
+  - $Y_{ij}$ and $Y_{ik}$, $j \neq k$
+  - $Cov(Y_{ij}, Y_{ik}) = \sigma_1^2 t_{ij} t_{ik} + \sigma_{01}(t_{ij} + t_{ik}) + \sigma_0^2$
+
+- The ICC is now a function of time:
+  $$Corr(Y_{ij}, Y_{ik}) = 
+  \frac{\sigma_1^2 t_{ij} t_{ik} + \sigma_{01}(t_{ij} + t_{ik}) + \sigma_0^2}{\sqrt{\sigma_1^2 t_{ij} + 2\sigma_{01} t_{ij} + \sigma_0^2 + \sigma_{\epsilon}^2} \sqrt{\sigma_1^2 t_{ik} + 2\sigma_{01} t_{ik} + \sigma_0^2 + \sigma_{\epsilon}^2}}$$
+
+---
+
+#### Marginal models Vs Subject specific Models
+
+3. The General Linear Mixed-effects model:
+
+$$\color{red}{Y_i = X_i\beta + Z_ib_i + \epsilon_i}$$
+
+$$b_i \sim N(0, D), \epsilon_i \sim N(0, \Sigma_i)$$; $b_1, b_2, \ldots, b_N, \epsilon_1, \epsilon_2, \ldots, \epsilon_N$ independent
+
+- It can be written as:
+
+$$Y_i/b_i \sim N(\color{red}{X_i\beta + Z_ib_i}, \Sigma_i)$$
+
+$$b_i \sim N(0, D)$$
+
+---
+#### Marginal models Vs Subject specific Models
+
+It is also called a <span style="color: blue;">hierarchical model</span>:
+- A model for $Y_i$ given $b_i$
+- A model for $b_i$
+
+Marginally, we have that $Y_i$ distributed as:
+$$Y_i \sim N(X_i\beta, \color{red}{Z_iDZ_i' + \Sigma_i})$$
+
+Hence, very specific assumptions are made about the dependence of mean and covariance on the covariates $X_i$ and $Z_i$:
+
+ - Implied mean: $\color{red}{X_i\beta}$
+
+ - Implied covariance: $\color{red}{V_i = Z_iDZ_i' + \Sigma_i}$
+
+<span style="color: blue;">Note that the hierarchical model implies the marginal, NOT vice versa.</span>
+
+---
+
+#### Marginal models vs subject specific models ... (3)
+
+
+```{r, out.width='70%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/fig13.png")
+```
+
+---
+class: inverse, middle
+
+#### Marginal model: estimation and inference
+
+- Estimation of the marginal model
+ - Introduction
+ - Maximum likelihood estimation (MLE)
+ - Restricted maximum likelihood estimation (RMLE)
+ 
+- General guidelines for model building
+
+- Estimation and tests for random effects
+
+- Practical: Fitting LMM in R
+
+---
+
+#### Recap: The General Linear Mixed effects Model (GLMM)
+
+- GLMM:
+
+$Y_i = X_i\beta + Z_ib_i+ \epsilon_{i}$
+
+where
+ - $b_i \sim N(0,D)$
+ - $\epsilon_{i}\sim N(0,\Sigma_i)$
+ - $b_1, b_2, ..., b_N, \epsilon_{1}, \epsilon_{2}, ..., \epsilon_{N}$ independent
+
+- Terminology:
+
+ - Fixed effects: $\beta$
+ 
+ - Random effects: $b_i$
+ 
+ - Variance components: $𝐷$ and $\Sigma_i$
+
+
+---
+
+#### Estimation of the marginal model
+
+- Recall: GLMM
+
+$Y_i = X_i\beta + Z_ib_i+ \epsilon_{i}$
+
+where
+ $b_i \sim N(0,D)$, $\epsilon_{i}\sim N(0,\Sigma_i)$
+ 
+ $b_1, b_2, ..., b_N, \epsilon_{1}, \epsilon_{2}, ..., \epsilon_{N}$ independent
+
+- The implied marginal model equals: $Y_{i}\sim N(X_i\beta, Z_iDZ_{i}'+ \Sigma_i)$
+- Let:
+ - Residual error covariance matrix: $\Sigma_i = \sigma_i^2I_{n_i}$
+ - The marginal covariance matrix: $V_i = Z_iDZ_{i}'+ \Sigma_i$
+- Inferences based on the marginal model do not explicitly assume the presence of random effects representing the natural heterogeneity between subjects
+
+---
+
+**Notation:**
+
+ - $\beta$: vector of fixed effects (as before)
+ - $\alpha$: Vector of all variance components in $D$ and $\Sigma_i$
+ - $\theta = (\beta',\alpha')$ vector of all parameters in marginal model
+
+- Marginal likelihood function is given by:
+
+$$L_{LM}(\theta) = \prod_{i=1}^N \left\{ (2\pi)^{-n_i/2} |V_i(\alpha)|^{-1/2} \exp\left(-\frac{1}{2} (Y_i-X\beta)^T V_i(\alpha)^{-1} (Y_i-X\beta) \right) \right\}$$
+If $\alpha$ were known, the maximum likelihood estimate (MLE) of $\beta$ would be: 
+$$\hat{\beta}(\alpha) = \left( \sum_{i=1}^N (X_i^T W_i X_i)^{-1} \sum_{i=1}^N X_i^T W_i y_i \right)$$
+
+where $W_i = V^{-1}$.
+
+
+---
+
+- In most cases, $\alpha$ were unknown, and needs to be replaced by
+an estimate $\hat{\alpha}$
+
+- Two frequently used estimation methods for $\alpha$ 
+  - Maximum likelihood (ML)
+  - Restricted maximum likelihood (REML)
+  
+---
+
+#### Maximum Likelihood Estimation (MLE)
+
+- **ML estimation of $V_i$**:
+  - Does not take into account that $\beta$ estimated from data.
+  
+  - Does not account for degrees of freedom lost.
+  
+  - Generally results in biased estimation of $V_i$.
+
+---
+
+#### Restricted Maximum Likelihood Estimation (REML)
+
+- **What’s the difference between ML and REML?**
+  - ML estimates of variances are known to be biased in small samples.
+  - The simplest case: Sample variance
+  
+ $$Var(x) = \frac{1}{n - 1} \sum_{i=1}^{n} (x_i - \bar{x})^2$$
+ 
+  - To obtain an unbiased estimate, we need to divide by $n-1$ because we estimate the mean
+    
+      $$\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i$$
+- The REML estimation is a generalization of this idea.
+
+- It provides unbiased estimates of the parameters in the covariance matrix $V_i$ in small samples.
+
+---
+
+#### Features of REML estimation:
+
+- It corrects for the downward bias in the ML parameters.
+
+- It handles strong correlations among the responses more effectively.
+
+- Available in all software that fit marginal and mixed effects models.
+
+- The default estimation method in most software (R, SAS).
+
+- It works is by applying a transformation in the longitudinal outcome 𝑌 based on the chosen structure of the design matrix 𝑋(i.e., which predictors you have included in the model).
+
+- Models with different mean structures not comparable.
+
+ - Since different observations involved.
+
+---
+
+#### Features of REML estimation
+
+- It corrects for the downward bias in the ML parameters
+
+- It handles strong correlations among the responses more effectively
+
+- Available in all software that fit marginal and mixed effects models
+
+- The default estimation method in most software (R, SAS)
+
+- It works by applying a transformation in the longitudinal outcome $𝑌$ based on the chosen structure of the design matrix $𝑋$ (i.e., which predictors you have included in the model)
+
+- Models with different mean structures not comparable.
+ - since different observations involved.
+
+---
+
+#### ML versus REML
+
+- Both are based on the likelihood principle, which has the properties of consistency, asymptotic normality, and efficiency.
+
+- The differences between ML and REML estimation increase as the number of fixed effects in the model increases.
+
+- Difference between ML and REML is less marked if $n>p$
+
+- We cannot compare the likelihoods of models fitted with REML and have different $X\beta$ part!
+
+
+---
+
+#### Components of the linear mixed Effects model (LMM)
+
+- $Y_i = X_i\beta + Z_ib_i+ \epsilon_{i}$
+
+
+- The implied marginal model equals: $Y_{i}\sim N(X_i\beta, Z_iDZ_{i}'+ \Sigma_i)$
+- The mean structure: $X_i\beta$
+
+- The covariance structure:
+
+ - When we estimate the covariance matrix without making any particular assumption about the covariance structure, we say that we are using an unrestricted or unstructured covariance matrix (UN).
+ 
+ - As we shall see later, it is sometimes advantageous to model
+the covariance structure more parsimoniously.
+
+---
+
+#### Fitting marginal models in R
+
+- **R>** The following code fits a marginal model for the growth data with a compound symmetry correlation structure:
+
+```{r, eval=FALSE}
+gls.Symm <- gls(distance ~ Sex * I(age - 11), data = growth, 
+                correlation = corSymm(form = ~1|Subject),
+                weights = varIdent(form = ~1|age))
+```
+
+- The Restricted Maximum Likelihood (REML) method is commonly used as the default estimation approach for the Generalized Least Squares (GLS).
+
+---
+
+#### Covariance matrix ... (1)
+
+Variances, covariances and correlations
+
+- variance measures how far a set of numbers is spread out (always positive)
+
+- covariance is a measure of how much two random variables change together (positive or negative)
+
+- correlation a measure of the linear correlation (dependence) between two variables (between −1 and 1; 0 no correlation)
+
+- We need an appropriate choice for the marginal covariance matrix: $V_i = Z_iDZ_{i}'+ \Sigma_i$ in order to appropriately describe the correlations between the repeated measurements
+
+- Mostly used appropriate for the research question under study– independent, compound symmetry or exchangeable, autoregressive, unstructured.
+
+---
+#### Covariance matrix ... (2)
+
+```{r, out.width='60%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/workcorr.png")
+```
+
+
+- Independent covariance structure
+ - assumes that the measurements are<span style="color: red;"> uncorrelated.</span> i.e., no linear relationship between them.
+- Compound symmetry covariance structure
+ - assumes that all correlations between measurements are <span style="color: red;">equal.</span>  
+- Autoregressive covariance structure
+ - assumes that <span style="color: red;">correlations decrease as the time interval between measurements increases.</span>   
+    - As the time interval increases, the correlation decreases exponentially.
+- Unstructured covariance structure
+ - <span style="color: red;">makes no assumptions about the correlations between measurements.</span>  
+
+---
+
+#### Example code
+
+```{r, eval=FALSE}
+
+library(nlme)
+# Independent covariance structure
+fit_i <- lme(response ~ time, random = ~ 1 | subject, 
+             correlation = corSymm(form = ~ 1))
+
+# Compound symmetry covariance structure
+fit_c <- lme(response ~ time, random = ~ 1 | subject, 
+             correlation = corCompSymm(form = ~ 1))
+
+# Autoregressive covariance structure
+fit_ar <- lme(response ~ time, random = ~ 1 | subject, 
+              correlation = corAR1(form = ~ time))
+
+# Unstructured covariance structure
+fit_un <- lme(response ~ time, random = ~ 1 | subject, 
+              correlation = corSymm(form = ~ 1))
+```
+
+---
+
+#### Model building
+
+ - We have seen that marginal models consist of two parts:
+
+   - Mean part $X\beta:$ that describes how covariates we have put in the model explain the average of the repeated measurements.
+   - Covariance part $V_i:$ assumed covariance structure between the repeated measurements.
+
+- In the majority of the cases, scientific interest focuses on the mean part.
+
+- However, to obtain valid and efficient inferences for the mean part, the covariance part needs to be adequately specified.
+
+
+---
+
+#### General guidelines for model building
+
+- Exploratory data analysis Descriptive statistics, individual group
+profiles, plots
+
+- Begin with simple models and build towards more complex mean structure
+ - Put all the covariates of interest in the mean part, considering possible nonlinear and interaction terms - do NOT remove the ones that are not significant
+
+- Then select covariance structure covariance matrix $V_i$ that adequately describes the correlations in the repeated measurements
+
+- Finally, reduce the mean structure
+
+ - return to the mean part and exclude non significant covariates
+ - start by testing the interaction terms, and then the nonlinear terms
+
+- Model diagnostics
+
+
+---
+
+#### Fitting linear mixed models in R ... further details
+
+- There are two packages in R for fitting multilevel models
+
+- The older and more comprehensive package is `nlme`, an acronym for <span style="color: blue;">nonlinear mixed effects models</span>
+
+- Its limitation is that it only fits <span style="color: blue;">normal-based models</span> and was not designed to fit mixed models to <span style="color: blue;">non-hierarchical data</span>
+
+- The newer package is `lme4`
+
+- It can handle <span style="color: blue;">generalized linear mixed effect regression models</span> such as logistic and Poisson regression
+
+- It currently lacks the <span style="color: blue;">nonlinear features</span> of `nlme`
+
+- Since we are going to focus on examples based on normal theory, our focus will be on the `nlme` package
+
+---
+
+#### Model: Jimma infant data
+
+$$W_{ij} = \beta_0 + b_{0i} + \beta_1S_i + (\beta_2 + b_{1i})A_{ij} + \beta_3{A_{ij}}^2 + \beta_4S_iA_{ij} + \beta_5{A_{ij}}^2S_i + \varepsilon_{ij}$$
+
+- $W_{ij}$: weight (Kg) of the $i^{th}$ infant at the $j^{th}$ visit.
+
+- $A_{ij}$: Age of the $i^{th}$ infant at the $j^{th}$ visit.
+
+- $S_i$: Sex of the $i^{th}$ infant (<span style="color: blue;">Female=0, Male=1</span>)
+
+- $b_{0i}$: <span style="color: blue;">random intercept</span>; $b_{1i}$: <span style="color: blue;">random slope</span>
+
+---
+
+#### Basic components from R
+
+- The function <span style="color: green;">`lme`</span> under the library <span style="color: green;">`nlme`</span> in R fits:
+  - <span style="color: blue;">Linear mixed-effects model</span>
+  - <span style="color: blue;">Multilevel linear mixed effects model</span>
+
+- It uses <span style="color: blue;">maximum likelihood</span> or <span style="color: blue;">restricted maximum likelihood</span>
+
+- The command <span style="color: green;">`lme`</span> in R is as follows:
+
+```{r, eval=FALSE}
+lme(fixed, data, random, correlation, weights, subset, 
+    method, na.action, control, contrasts = NULL, keep.data = TRUE)
+```
+
+- <span style="color: blue;">`fixed`</span> is an argument to define the fixed effects portion.
+- <span style="color: blue;">`random`</span> is an argument to define the random effects portion.
+- <span style="color: blue;">`data`</span> is an optional data frame containing the variables named <span style="color: blue;">`correlation`</span> describing the within-group correlation structure.
+- <span style="color: blue;">`method`</span> is an argument to <span style="color: blue;">`lme`</span> that changes the estimation method.
+
+---
+
+- <span style="color: blue;">REML</span>: the model is fit by maximizing the restricted log-likelihood.
+- If <span style="color: blue;">ML</span>, the log-likelihood is maximized. The Default is REML.
+
+**Fixed and Random Parts:**
+   - The <span style="color: blue;">fixed part</span> is `fixed = distance ∼ Sex + Sex ∗ age`.
+   - The <span style="color: blue;">random part</span> is `random =∼ 1|Subject`.
+
+- If the random part is specified as above, it means we will fit a model with a <span style="color: blue;">random intercept</span>.
+
+- Here, the response is specified only on the fixed part.
+
+- In the random part, the model statement begins with just a ∼.
+
+- If the random formula is omitted, its default value is taken as the right-hand side of the fixed formula.
+
+- The vertical bar separates the model specification from the structural specification.
+
+---
+**Model:**
+$$D_{ij} = \beta_0 + \beta_1 S_i + \beta_2 A_{0ij} + \beta_4 S_i A_{0ij} + b_{0i} + b_{1i} A_{0ij} + \varepsilon_{ij}$$
+
+- $D_{ij}$: Orthodontic distance of the $i^{th}$h child at the j^{th}$ visit.
+- $A_{ij}$: Age of the $i^{th}$ child at the $j^{th}$ visit, $A_{0ij} = A_{ij} - 8$
+- $S_i$: Sex of the $i^{th}$ child (boys = 1, girls = 2)
+- $b_{0i}$: Random intercept
+- $b_{1i}$: Random slope
+
+---
+**Growth Data**
+
+We want to fit a random intercept model on growth data, and the following code can be used:
+
+```{r, warning=FALSE, message=FALSE}
+library(nlme)
+growth$age <- as.numeric(growth$age)
+growth.fit1 <- lme(fixed = measure ~ Sex + Sex * age,
+                   data = growth, random = ~ 1 | ind)
+```
+**Code Explanation:**
+
+- Fixed effect: `fixed = distance ~ Sex + Sex * age`
+- Name for the data: `data = growth`
+- Random intercept: `random = 1 | ind`
+
+For the `growth.fit1` object, `print(growth.fit1)` gives...
+
+---
+
+```{r}
+print(growth.fit1)
+```
+
+---
+
+**Main <span style="color: blue;">`lme`</span> Methods:**
+
+- <span style="color: blue;">`ACF`</span>: Empirical autocorrelation function of within-group residuals
+- <span style="color: blue;">`anova`</span>: Likelihood ratio or conditional tests
+- <span style="color: blue;">`augPred`</span>: Predictions augmented with observed values
+- <span style="color: blue;">`coef`</span>: Estimated coefficients for different levels of grouping
+- <span style="color: blue;">`fitted`</span>: Fitted values for different levels of grouping
+- <span style="color: blue;">`fixef`</span>: Fixed-effects estimates
+- <span style="color: blue;">`intervals`</span>: Confidence intervals on model parameters
+- <span style="color: blue;">`logLik`</span>: Log-likelihood at convergence
+- <span style="color: blue;">`pairs`</span>: Scatter-plot matrix of coefficients or random effects
+- <span style="color: blue;">`plot`</span>: Diagnostic Trellis plots
+- <span style="color: blue;">`predict`</span>: Predictions for different levels of grouping
+- <span style="color: blue;">`print`</span>: Brief information about the fit
+- <span style="color: blue;">`qqnorm`</span>: Normal probability plots
+- <span style="color: blue;">`ranef`</span>: Random-effects estimates
+- <span style="color: blue;">`resid`</span>: Residuals for different levels of grouping
+- <span style="color: blue;">`summary`</span>: More detailed information about the fit
+- <span style="color: blue;">`update`</span>: Update the <span style="color: blue;">`lme`</span> fit
+- <span style="color: blue;">`Variogram`</span>: Semivariogram of within-group residuals
+
+---
+The command `coef(growth.fit1)` in R produced;
+
+```{r}
+coef(growth.fit1)
+```
+---
+Command fixef (Ortho.fit1), the following output is produced
+```{r}
+fixef(growth.fit1)
+```
+
+
+- The parameters are average
+
+---
+
+- Producing Maximum Likelihood Estimates Using <span style="color: blue;">lme</span>
+
+- In all of the above outputs, we produced the Restricted Maximum
+
+- Likelihood Estimates as REML is the default method in the <span style="color: blue;">lme</span>.
+
+- The argument <span style="color: blue;">method=ML</span> requests that estimates be obtained using full maximum likelihood.
+
+```{r}
+growth.fit2 <-lme(fixed = measure ~ Sex+Sex*age, method= "ML",
+data = growth, random = ~ 1|ind)
+```
+
+
+- The output that follows is based on the maximum likelihood
+estimation.
+
+- The <span style="color: blue;">intervals growth.fit2</span> command in R will produce the following confidence interval for the parameters of our model.
+
+---
+```{r}
+intervals(growth.fit2)
+```
+
+---
+
+- The summary(growth.fit2) command in R will produce the following output for the
+parameters of our model
+
+```{r}
+summary(growth.fit2)
+```
+
+---
+
+- The <span style="color: blue;">maximum likelihood</span> is the estimation method that was used.
+
+- The <span style="color: blue;">AIC</span> and <span style="color: blue;">log likelihood</span> can be used to make comparisons between models with different fixed effects (or random effects).
+
+- The next estimates for the <span style="color: blue;">random effects</span> part of the model.
+
+- In the line where the numerical estimates appear, the label is <span style="color: blue;">StdDev</span>, indicating that standard deviations are displayed.
+
+- The estimates displayed are the standard deviations of <span style="color: blue;">between variability</span> $(\sigma_b = 1.74)$ and the standard deviations of <span style="color: blue;">within variability</span> $(\sigma_w = 1.369)$.
+
+- In the <span style="color: blue;">Fixed Effects</span> sections, we have the reported value of the intercept, its estimated standard error, and <span style="color: blue;">Wald test</span> for whether its value is significantly different from zero or not.
+
+---
+
+**Random Slope Model:**
+
+- Random intercept: `random = 1|ind`
+- Random intercept and slope: `random =∼ age|subject`
+
+```{r}
+growth.fit2 <- lme(fixed = measure ~ Sex + Sex * age,
+                   data = growth, random = ~ age | ind)
+```
+
+*VarCorr(growth.fit2)*, variance components can be extracted from the
+model
+
+```{r}
+VarCorr(growth.fit2)
+```
+
+---
+
+**Inference for the Marginal Model**
+
+- Having fitted a marginal model using maximum likelihood, we can use standard inferential tools for performing hypothesis testing:
+  - <span style="color: blue;">Wald test</span>
+  - <span style="color: blue;">t-test / F-test</span>
+  - Score test
+  - Likelihood ratio test (LRT)
+  - Robust Inference
+  
+- Following the model building strategy described above, we will:
+  - First, describe how we can choose the appropriate covariance matrix, and
+  - Then focus on hypothesis testing for the mean part of the model.
+
+---
+**Hypothesis Testing for $V_i$:**
+
+- Assuming the same mean structure, we can fit a series of models and choose the one that best describes the covariances.
+
+- In general, we distinguish between two cases:
+  - Comparing two models with <span style="color: blue;">nested covariance matrices</span>
+  - Comparing two models with <span style="color: blue;">non-nested covariance matrices</span>
+
+- <span style="color: blue;">Model A is nested in Model B</span> when Model A is a special case of Model B – i.e., by setting some of the parameters of Model B at some specific value, we obtain Model A.
+
+---
+**For nested models, the preferable test for selecting $V_i$ is the <span style="color:purple; font-weight:bold;">likelihood ratio test (LRT)</span>:**
+
+The <span style="color:purple; font-weight:bold;">likelihood ratio test (LRT)</span> is calculated as follows:
+
+$$LRT = -2 \left( \ell(\theta_0) - \ell(\theta_a) \right)$$
+
+Where:
+
+- $\ell(\theta_0)$ is the value of the log-likelihood function under the null hypothesis, i.e., the special case model.
+- $\ell(\theta_a)$ is the value of the log-likelihood function under the alternative hypothesis, i.e., the general model.
+- $p$ denotes the number of parameters being tested.
+
+**Note:** Provided that the mean structure in the two models is the same, we can either compare the <span style="color:blue;">REML or ML likelihoods</span> of the models (preferably REML).
+
+
+---
+
+- We can rewrite the two hypotheses as:
+
+
+  $$LRT = -2 \left( \ell(\theta_0) - \ell(\theta_a) \right) \sim \chi_p^2$$
+
+$$H_0:
+\begin{cases}
+    σ_{12} = σ_{22} = σ_{32} = σ_{42} = σ^2 \\
+    σ_{12} = σ_{13}, = \dots = σ_{34} = \tilde{σ}
+\end{cases}$$
+ $$H_0: At \ least \ one \ variance \ or \ covariance \ is \ not \ equal \ to \ others.$$
+**Inference for the Marginal Model:**
+
+- When we have non-nested models, we cannot use standard tests anymore.
+
+- When we compare two non-nested models, we choose the model that has the lowest <span style="color:purple; font-weight:bold;">AIC/BIC</span> value.
+
+- The <span style="color:purple; font-weight:bold;">unstructured covariance matrix</span> is the most general matrix we can assume:
+  - All other covariance matrices are a special case of the unstructured matrix.
+  - But realistically, it can only be fitted when we have balanced data and relatively few time points.
+
+---
+
+**Information Criteria:**
+
+- LR tests can only be used to compare nested models.
+
+- How to compare non-nested models?
+
+- The general idea behind the <span style="color:purple; font-weight:bold;">LR test</span> for comparing model A to a more extensive model B is to select model A if the increase in likelihood under model B is small compared to the increase in complexity.
+
+- A similar argument can be used to compare non-nested models A and B.
+
+- One then selects the model with the largest (log-)likelihood provided it is not (too) complex.
+
+- Criterion: <span style="color:purple; font-weight:bold;">Akaike (AIC), Schwarz (SBC)</span>.
+
+---
+
+**AIC:**
+
+- For each model compute <span style="color:purple; font-weight:bold;">AIC</span> = $-2 \log(L) + kp$.
+
+- $p$ is the number of parameters in the model.
+
+- $L$ is the likelihood.
+
+- $k$ is a constant (often 2). $k$ can be seen as a penalty for additional parameters. $k$ between 2 and 6. The recommendation is to use a larger $k$ with a small sample.
+
+- Has theoretical basis in the prediction of future data.
+
+- In practice, it sometimes overfits and chooses models that are sometimes too large.
+
+---
+
+**Notes on IC:**
+
+- <span style="color:darkorange; font-weight:bold;">Information criteria are not formal testing procedures!</span>
+
+- The AIC and BIC do not always select the same model – when they disagree:
+
+  - AIC typically selects the more elaborate model, whereas BIC selects the more parsimonious model.
+
+- For the comparison of models with different mean structures, <span style="color:blue; font-weight:bold;">IC should be based on ML rather than REML</span>, as otherwise the likelihood values would be based on different sets of error contrasts, and therefore would no longer be comparable.
+
+---
+
+**Hypothesis Testing for Regression Coefficients:**
+
+- Hypothesis testing on $\beta:$ We assume that a suitable choice for the covariance matrix has been made.
+
+- In the majority of the cases, we compare nested models, and hence standard tests can be used.
+
+- We distinguish between two cases:
+  - Tests for individual coefficients.
+  - Tests for groups of coefficients.
+
+---
+
+**Tests for Individual Coefficients:**
+
+- Tests for individual coefficients are based on the Wald-type statistic but assume the t-distribution for calculating p-values.
+
+- The hypothesis is:
+  $$H_0: \beta = 0 \quad H_a: \beta ≠ 0$$
+- We use the t test statistic: $$\frac{{\hat{s.e.}(\beta)}}{{\hat{\beta}}} \sim t_{df}$$
+
+- df specified according to the number of subjects and the number of repeated measurements per subject.
+
+---
+
+**Tests for Group Coefficients:**
+
+- Tests for group coefficients are based on the <span style="color:purple">F-test</span>.
+
+- The hypothesis is:
+  $$H_0: L\beta = 0 \ vs \ H_a: L\beta \neq 0$$
+  where $L$</span> is the contrasts matrix.
+
+- The numerator df are always equal to the rank of the contrast matrix $L$.
+
+- Denominator df need to be estimated from the data using methods such as the <span style="color:darkorange">Containment method</span>, <span style="color:darkorange">Satterthwaite approximation</span>, <span style="color:darkorange">Kenward and Roger approximation</span>.
+
+- There is no single method that provides satisfactory results in all settings - it matters more what you do in <span style="color:darkorange">small samples</span>.
+
+
+---
+
+#### Notes on Hypothesis Testing for Regression Coefficients:
+
+- Hypothesis testing for the regression coefficients $\beta$:
+ 
+  - The <span style="color:red; font-weight:bold;">likelihood ratio test</span>, and the classical univariate and multivariate <span style="color:red; font-weight:bold;">Wald tests</span> (using the $\chi^2$ distribution instead of the t or F distributions), are 'liberal'.
+ 
+  - They give <span style="color:purple; font-weight:bold;">smaller p-values</span> than they should give, especially in <span style="color:purple; font-weight:bold;">small samples</span>.
+
+- The LRT for comparing models with different $\beta$ parts is only valid when the models have been fitted using maximum likelihood and not REML.
+
+
+**For Studies with Small Samples:**
+
+- <span style="color:blue; font-weight:bold;">P-values of Wald test may be too small.</span>
+- <span style="color:blue; font-weight:bold;">Confidence intervals may be too narrow.</span>
+- <span style="color:red; font-weight:bold;">t and F-tests</span> may be used to remedy this.
+- Difficulty is with determining the df.
+
+
+---
+
+#### Inference for the Variance Components:
+
+- Inference for the <span style="color:green">mean structure</span> is usually of primary interest.
+
+- However, inferences for the <span style="color:blue">covariance structure</span> are of interest as well:
+  - Interpretation of the **<span style="color:purple">random variation</span>** in the data.
+  - **<span style="color:purple">Over-parameterized covariance structures</span>** lead to inefficient inferences for the **<span style="color:green">mean</span>**.
+  - Too restrictive models invalidate inferences for the **<span style="color:green">mean structure</span>**.
+  
+
+- The reported p-values often do not test meaningful hypotheses
+
+- The reported <span style="color:blue">p-values</span> are often wrong.
+
+- The <span style="color:blue">sample size requirements</span> for these tests are excessive & often not met (approximately 400 or more subjects).
+
+---
+
+#### Likelihood Ratio Test
+
+- After a candidate model is selected, a <span style="color:blue">LRT</span> can be computed by comparing the candidate model with the reduced model.
+
+- The <span style="color:blue">mean structure</span> of the model remains the same across both models, but the number of <span style="color:blue">random effects</span> is reduced by one in the reduced model.
+
+- Note: as long as models are compared with the same <span style="color:blue">mean structure</span>, a valid LR test can be obtained under <span style="color:blue">REML</span> as well.
+
+- Note: if $H_0$ is a **<span style="color:purple">boundary value</span>**, the classical $\chi^2$ approximation may not be valid.
+
+- For some very specific null-hypotheses on the boundary, the correct asymptotic null-distribution has been derived.
+
+- Example: for the <span style="color:red">infant survival data</span>, testing whether the **<span style="color:purple">variance components</span>** associated with the **<span style="color:purple">random time effect</span>** are equal to zero is equivalent to testing 
+$$H_0 : d_{12} = d_{22} = 0$$
+
+---
+
+**<span style="color:red">Case 1: No Random Effects vs One Random Effect</span>**
+
+- **<span style="color:blue">Hypothesis of Interest:</span>**
+
+$H_0: D = 0$ vs $H_a: D = d_{11}$ for some scalar $d_{11}$
+
+- Asymptotic null distribution equals $-2 \ln \lambda_N \rightarrow \chi_{0:1}^2$, the mixture of $\chi_0^2$ and $\chi_1^2$ with equal weight 0.5.
+
+
+**<span style="color:red">Case 2: One vs Two Random Effects</span>**
+
+- **<span style="color:blue">Hypothesis of Interest:</span>**
+
+$$D = \begin{pmatrix} d_{11} & 0 \\ 0 & 0 \end{pmatrix},$$ for $d_{11} > 0$, versus $H_a$ that $D$ is a 2 by 2 positive semi definite matrix.
+
+- Asymptotic null distribution: $-2 \ln \lambda_N \rightarrow \chi_{1:12}^2$, the mixture of $\chi_1^2$ and $\chi_2^2$ with equal weight 0.5.
+
+---
+class: inverse,  middle
+
+# Day 3
+
+## Models for Non-Gaussian Longitudinal Data
+ 
+ * Generalized Estimating Equations (GEE)
+ * Generalized Linear Mixed Model (GLMM)
+ 
+---
+
+#### Recap: Marginal (population average) models:
+
+- Responses are marginalized over all other responses.
+
+- Parameters characterize the <span style="color:purple; font-weight:bold;">marginal expectation</span>.
+
+- Inferences based on the marginal model do not explicitly assume the presence of <span style="color:blue; font-weight:bold;">random effects</span> representing the natural heterogeneity between subjects.
+
+- The implied marginal model equals: $$\mathbf{Y}_i \sim \mathcal{N}(\mathbf{X}_i\beta, \mathbf{Z}_iD\mathbf{Z}_i' + \Sigma_i).$$
+
+#### Subject-specific models:
+
+- If the aim is to study how subjects change overtime and what characteristics influence such changes.
+
+- Subject-specific models differ from marginal models by the inclusion of parameters specific to the subject.
+$$\mathbf{Y}_i|\mathbf{b}_i \sim \mathcal{N}(\mathbf{X}_i\beta + \mathbf{Z}_i\mathbf{b}_i,\, \Sigma_i),$$
+  where $\mathbf{b}_i \sim \mathcal{N}(0, \mathbf{D}_i).$
+
+---
+
+**Recap: Generalized linear models**
+
+- LMM have the assumption that the conditional responses are normally distributed.
+
+- Normality assumption may not always be <span style="color:purple; font-weight:bold;">reasonable</span>, i.e., <span style="color:purple; font-weight:bold;">non-Gaussian responses</span>.
+
+- Different methodology should be used when responses are <span style="color:purple; font-weight:bold;">discrete</span>.
+
+- Suppose we have a dichotomous outcome, Y, measured cross-sectionally.
+
+- We are interested in making statistical inferences for this outcome, e.g.:
+
+  - Is there any difference between placebo and treatment corrected for the age and sex of the patients?
+  - Which factors best predict the outcome?
+
+---
+
+**Generalized linear models**
+
+- Suppose we have a dichotomous outcome, Y, measured cross-sectionally.
+$$\log\left(\frac{{\text{odds of success}}}{{1 - \text{odds of success}}}\right) = \log(\pi_i) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_p x_{ip}$$
+- Odds of success = $\pi_i / (1 - \pi_i) = \exp(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_p x_{ip})$
+
+- A unit change in $X_1$ from $x$ to $x+1$ (while all other covariates are held fixed) corresponds to $\exp(\beta_1)$.
+
+
+**Example Toenail Data**
+
+- **Toenail Dermatophyte Onychomycosis:** Common toenail infection, difficult to treat, affecting more than **<span style="color:purple">2%</span>** of the population.
+
+- Classical treatments with **<span style="color:red">antifungal compounds</span>** need to be administered until the whole nail has grown out healthy.
+
+- New compounds have been developed which reduce treatment to **<span style="color:purple">3 months</span>**.
+
+- Randomized, double-blind, parallel group, multicenter study.
+
+---
+
+**Toenail Data**
+
+- **Research question:** **<span style="color:red">Severity relative to treatment of TDO, coded as  0 (not severe) or 1 (severe)</span>**.
+
+- The question of interest was whether the **<span style="color:blue">percentage of severe infection decreased</span>** over time, and whether that evolution was different for the **<span style="color:blue">two treatment groups</span>**:
+ 
+  - <span style="color:red">2 × 189 patients</span> randomized, <span style="color:red">36 centers</span>.
+ 
+  - <span style="color:red">48 weeks</span> of total follow-up (<span style="color:red">12 months</span>).
+ 
+  - <span style="color:red">12 weeks</span> of treatment (<span style="color:blue">3 months</span>).
+ 
+  - Measurements at <span style="color:blue">months 0, 1, 2, 3, 6, 9, 12</span>.
+  
+---
+
+**Toenail Data**
+
+```{r, warning=FALSE, message=FALSE}
+library(readr)
+toenail <- read_csv("Data/Toenail.csv")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(gtsummary)
+toenail %>% select(time, treatn) %>% 
+  tbl_summary(by=treatn) 
+```
+
+---
+**Recap: Generalized linear models**
+
+
+```{r}
+fit <- glm(formula = y ~ treatn * time, family = binomial, data = toenail)
+summary(fit)$coefficients
+```
+
+- $\beta_3 = -0.078$ is the interaction effect.
+- Borderline significance (p = 0.048) which means that trends might be different in the two treatment groups.
+- This analysis is wrong since we have not taken into account the multiple responses per subject.
+- We have considered 1907 independent observations (residual degrees of freedom + 1).
+```{r}
+length(toenail$y)
+```
+
+---
+
+### Generalized Estimating Equations (GEE)
+
+- We return our focus on repeated measurements data, namely, repeated categorical data
+  - we need to account for the correlations
+
+**Reminder:** In the marginal models for continuous multivariate data we took account of the correlations by incorporating a correlation matrix in the error terms
+  - <span style="color:blue;">ML</span> and <span style="color:red;">REML</span>
+
+**Challenges for Non-Gaussian Data**
+
+- For non-Gaussian data it is not straightforward to do that because there are no clear multivariate analogues of the univariate distributions
+  - we will do something similar, not in the error terms but in the score equations
+
+- Popular alternative approaches, like <span style="color:blue;">GEEs</span>, Alternating logistic regression (ALR), and Pseudo-likelihood (PL) have been formulated.
+---
+
+#### GEE .....(2)
+
+- GEE introduced by Liang and Zeger (Biometrika, 1986) is a <span style="color:blue">best way</span> to model longitudinal data in the marginal modeling framework for categorical responses.
+
+- The parameters of <span style="color:blue">GLMs</span> are estimated using the maximum likelihood approach.
+- Key idea: Finding the top of the <span style="color:blue">log-likelihood mountain</span> is equivalent to finding the parameter values for which the slope of the mountain is flat (i.e., zero).
+- The slope of the <span style="color:blue">log-likelihood mountain</span> is given by the score vector:
+
+$$S_{\beta} = \sum_{i} \frac{\partial \mu_i}{\partial \beta} V_i^{-1} (Y_i - \mu_i)$$
+
+Where:
+- $S_{\beta}$ represents the score vector.
+- $\mu_i$ is the mean of $Y_i$, and for dichotomous data $\mu_i = \pi_i$.
+- $V_i$ is a diagonal matrix with the variance of $Y_i$, e.g., for dichotomous data $V_{i-1} = diag(\pi_i(1 - \pi_i))$.
+
+---
+
+The idea of Liang and Zeger was to replace the diagonal matrix $V_i$ with a full covariance matrix:
+
+$$V_i = A_i^{-1/2} R_i(\alpha) A_i^{-1/2}$$
+
+Where:
+- $A_i$ is a diagonal matrix with the standard deviations $\sqrt{var(Y_i)}$.
+- $R_i(\alpha)$ represents a 'working' assumption for the pairwise correlations.
+
+- This approach follows the same form as the full likelihood procedure but restricts the specification to the first moment only.
+---
+#### GEE....(3)
+
+- If the assumed mean structure, $\mu_i$, is correctly specified, then
+  $$\hat{\beta} \sim \mathcal{N}(\beta, \text{var}(\hat{\beta}))$$
+  where 
+  $\text{var}(\hat{\beta}) = V_0^{-1} V_1 V_0^{-1}$
+  is called the Sandwich or Robust estimator.
+  - $V_0 = \sum_i \frac{\partial \mu_i}{\partial \beta} V_i^{-1} \frac{\partial \mu_i}{\partial \beta}$
+  - $V_1 = \sum_i \frac{\partial \mu_i}{\partial \beta} \text{var}(Y) V_1^{-1} \frac{\partial \mu_i}{\partial \beta}$
+
+   $V_0$ and $V_1$ are often referred to as the "bread" and "meat" of the Sandwich estimator.
+
+- GEE provides consistent regression coefficient estimates even if the correlation structure is miss-specified.
+
+- A poor choice of working correlation matrix can affect the efficiency of the estimators of $\beta$.
+
+---
+
+**Sandwich/Robust vs Naive/Purely Model-Based Standard Errors**
+
+- Software often also reports the Naive/model-based standard errors.
+- These standard errors assume that the working correlation matrix is correctly specified.
+- The Sandwich/Empirically Corrected/Robust standard errors correct for a possible misspecification of the correlation structure, although at the expense of power.
+- A correct guess ⟹ likelihood variance.
+
+- <span style="color:blue">GEE is not a likelihood-based approach</span> (i.e., a model)
+  - It is an estimation method
+- No assumptions for the joint distribution of repeated measurements ⟹ <span style="color:blue">Semi-parametric approach</span>
+- The method relies solely on assumptions about the mean response
+  - Pairwise correlations ⇒ we make a "<span style="color:blue">working</span>" assumption that possibly depends on parameters to be estimated
+  
+---
+
+- The mean and the correlations are separately defined! 
+   - This is in contrast to the GLMMs we will see in the next class.
+
+- <span style="color:blue">**Fitting algorithm**</span>:
+
+  - Fit a Generalized linear model ⟹ **<span style="color:blue">choose a working correlation matrix</span>** ⟹ update $\hat{\beta}$, the covariance, and the correlation matrix.
+
+- Interest is primarily in the $\beta$s, the covariance structure is considered as “nuisance” 
+
+   – Assumptions for the correlation are not supposed to be correct.
+
+- This has implications for <span style="color:blue">Hypothesis testing</span>:
+
+  - Likelihood ratio test or score test not applicable. 
+  
+  Why? (semi-parametric approach)   ⇒ The Wald test can be used.
+
+- Care needed with **<span style="color:blue">incomplete data</span>**.
+
+---
+
+## GEE in R
+
+- In R there are two main packages for GEE analysis, namely <span style="color:blue">gee</span> and <span style="color:blue">geepack</span>.
+
+- The main function to fit GEEs is <span style="color:blue">geeglm()</span> – this has similar syntax as the <span style="color:blue">glm()</span> function of base R that fits GLMs.
+
+- The major difference between <span style="color:blue">gee</span> and <span style="color:blue">geepack</span> is that <span style="color:blue">geepack</span> contains an <span style="color:blue">ANOVA method</span> that allows us to compare models and perform <span style="color:blue">Wald tests</span>.
+
+**Using Toenail data:** Variables in the data:
+- **obs:** observation number
+- **treat:** treatment group (0: Itraconazole (group B); 1: Lamisil (group A))
+- **id:** subject identification number
+- **time:** time at which the observation is taken (months)
+- **response:** the response measured (1: severe infection; 0: no severe infection)
+
+**Research question:** Does treatment have an effect in curing the infection or not?
+
+---
+
+A function that fits GEE to deal with correlation structures arising from repeated measures on individuals, or from clustering as in family data is:
+
+```{r, eval=FALSE}
+gee(formula, family, data, corStructure = "ar1", clusterID, startCoeff, 
+    maxit = 20, checks = TRUE, display = FALSE, datasources)
+```
+
+- `formula`: a string character which describes the model to be fitted.
+
+- `family`: description of the error distribution: 'binomial', 'gaussian', 'Gamma', or 'poisson'.
+
+- `data`: the name of the data frame that holds the variables.
+
+- `corStructure`: the correlation structure: 'ar1', 'exchangeable', 'independence', 'fixed', or 'unstructured'.
+
+- `clusterID`: the name of the column that holds the cluster IDs.
+
+- `startCoeff`: a numeric vector, the starting values for the beta coefficients.
+
+- `maxit`: an integer, the maximum number of iterations to use for convergence.
+
+---
+
+To fit GEE in R, you need the following packages first: **<span style="color:red">geepack, wgeesel, MuMIn</span>**
+
+```{r, warning=FALSE, message=FALSE}
+library(geepack)
+library(broom)
+# Fit the GEE models
+fit1 <- geeglm(y ~ treatn + time + treatn*time, id = idnum, data = toenail,
+               family = binomial(link = "logit"), corstr = "exchangeable", scale.fix = TRUE)
+fit2 <- update(fit1, corstr = "ar1")
+fit3 <- update(fit2, corstr = "unstructured")
+
+# Obtain summary results using broom
+fit1_summary <- tidy(fit1)
+fit2_summary <- tidy(fit2)
+fit3_summary <- tidy(fit3)
+
+# Print or manipulate the customized summaries as needed
+print(fit1_summary)
+```
+---
+```{r}
+print(fit2_summary)
+print(fit3_summary)
+```
+
+```{r}
+broom:::confint.geeglm(fit1)
+```
+
+---
+
+#### Choosing the best model
+- QIC = quasi-likelihood under the independence model criterion
+
+- GEE does not use maximum likelihood estimation like GLMM
+
+- QIC can help select working correlation matrix in GEE
+
+- MuMIn package calculates this statistic
+
+```{r, message=FALSE, warning=FALSE}
+#library(MuMIn)
+QIC(fit1, fit2, fit3)
+```
+
+
+---
+
+#### <span style="color:red">Generalized Linear Mixed Models (GLMMs)</span>
+
+- <span style="color:blue">GLMMs = GLMs (Logistic, Poisson, etc) with random effects</span>.
+
+- The intuitive idea behind GLMMs is the same as in LMMs, i.e.,
+
+  - The correlation between the repeated categorical measurements is induced by <span style="color:blue">unobserved random effects</span>.
+
+  - The categorical longitudinal measurements of a subject are correlated because all of them share the same <span style="color:blue">unobserved random effect</span> (conditional independence assumption).
+
+- The generic mixed model for $y_{ij}$ is a <span style="color:blue">Mixed-Effects Logistic Regression</span> and has the form:
+
+$$\log\left(\frac{\pi_{i}}{1 - \pi_{i}}\right) = X_{i}\beta + Z_{i}b_{i}, \quad b_{i} \sim \mathcal{N}(0, D)$$
+- **<span style="color:red">Random effects</span>** account for between-subject variability.
+
+---
+
+**Three-part specification for GLMMs**
+
+<span style="color:blue">**1.**</span> Conditional on the random effects $b_{i}$, the responses $y_{ij}$ are independent and have a Bernoulli distribution with mean $E(y_{ij} / b_{i}) = \pi_{ij}$ and variance $\text{Var}(y_{ij} / b_{i}) = \pi_{ij} (1 - \pi_{ij})$
+
+<span style="color:blue">**2.**</span> The conditional mean of $y_{ij}$ is given as $\log\left(\frac{\pi_{ij}}{1 - \pi_{ij}}\right) = x_{i}^T\beta + z_{i}^Tb_{i}$
+
+<span style="color:blue">**3.**</span> The random effects $\sim N(0, D$.
+
+- The mean and correlation structures are <span style="color:blue">simultaneously defined using random effects</span>.
+    - This has direct and important implications with respect to the interpretation of the parameters!
+
+---
+
+#### <span style="color:red">Estimation of GLMMs</span>
+
+- The estimation of GLMMs is based on the same principles as in marginal and mixed models for continuous data.
+ 
+  - i.e., we have a full specification of the distribution of the data (contrary to GEE), and hence we can use <span style="color:blue">maximum likelihood</span>.
+
+- No <span style="color:blue">REML</span>.
+
+- Nevertheless, there is an important complication in GLMMs.
+
+- The fitting of GLMMs is a <span style="color:blue">computationally challenging task</span>!
+
+---
+
+#### Log-likelihood expression for GLMMs
+
+- What is the problem?
+- The log-likelihood expression for GLMMs has the same form as in LMMs:
+$$\ell(\theta) = \sum_{i=1}^n \int p(y_{i} / b_{i}; \theta) p(b_{i}; \theta) db_{i}$$
+where $\theta$ are the parameters of the model.
+- In linear mixed effects models, both terms in the integrand 
+    - $p(y_{i} / b_{i}; \theta)$ and  $p(b_{i}; \theta)$ 
+
+are densities of (multivariate) normal distributions, and also because $y_{i}$ and $b_{i}$ are linearly related.
+
+
+---
+
+- **<span style="color:blue">What is the problem?</span>**
+
+- In GLMMs, the two terms of the integrand denote densities of different distributions. For example, in mixed effects logistic regression:
+ 
+  - $p(y_{i} / b_{i}; \theta)$ ⟹ Bernoulli distribution
+ 
+  - $p(b_{i}; \theta)$ ⟹ Multivariate Normal distribution
+
+- The implication is that in GLMMs, the same integral does <span style="color:blue">not have a closed-form solution</span>.
+
+**<span style="color:blue">The Solutions</span>**
+
+To overcome this problem, two general types of solutions have been proposed:
+
+- **Approximation of the integrand:** This entails approximating the product inside the integral (i.e., $p(y_{i} / b_{i}; \theta) p(b_{i}; \theta)$) by a multivariate normal distribution for which the integral has a closed-form solution:
+  - <span style="color:blue">Penalized Quasi Likelihood (PQL)</span>
+  - <span style="color:blue">Laplace approximation</span>
+
+---
+
+- **Approximation of the integral:** This entails approximating the whole integral (i.e., $\int p(y_{i} / b_{i}; \theta) p(b_{i}; \theta)$) by a sum:
+  - <span style="color:blue">Gaussian Quadrature (GQ) & Adaptive Gaussian Quadrature (AGQ)</span>
+  - <span style="color:blue">Monte Carlo & MCMC (Bayesian approach)</span>
+
+- From the two alternatives, methods that rely on **<span style="color:red">approximation of the integral (GQ, AGQ) have been shown to be superior</span>**.
+
+- Though they are (much) more computationally demanding, they have a parameter that controls the accuracy of the approximation:
+ 
+  - **<span style="color:purple">In GQ rules, it is the number of quadrature points (nGQ=1) point is equivalent to the Laplace approximation.</span>**
+ 
+  - **<span style="color:red">AGQ needs fewer quadrature points than classical GQ but is more time-consuming.</span>**
+ 
+  - **<span style="color:green"> The Laplace approximation is a good choice when dealing with many repeated measures per subject.</span>**
+
+- **<span style="color:purple">The higher nGQ (nAGQ), the more accurate the approximation will be.</span>**
+
+---
+
+#### Estimation of random effects in GLMMs
+
+- Estimation of the random effects proceeds in a similar manner as in linear mixed models.
+
+- Predictions of random effects can be based on the <span style="color:blue">posterior distribution</span> $f(b_{i} / Y_{i} = y_{i})$.
+
+  - <span style="color:blue">Empirical Bayes (EB) estimate</span>:
+
+    - May be used when interest is in predicting subject-specific evolutions.
+    - Identifying subjects with outlying evolutions.
+  - Estimation is based on the posterior distribution of $b_{i}$.
+  - <span style="color:blue">Posterior mode</span> used as estimate.
+
+- With EB estimates, $\hat{b}_{i}$, subject-specific probability profile:
+  $$P(\widehat{Y_{ij} = 1} | b_{i}) = \frac{\exp(X_{ij}\hat{\beta} + Z_{ij}\hat{b}_{i})}{1 + \exp(X_{ij}\hat{\beta} + Z_{ij}\hat{b}_{i})}$$
+
+---
+#### Conditional interpretation of $\beta$ in GLMMs
+
+- $\beta$ in GLMMs has a **<span style="color:blue">conditional interpretation</span>**.
+
+- The parameters are **<span style="color:red">conditional on the random effects</span>**.
+
+- Interpretation of the <span style="color:blue">fixed-effects coefficients</span>:
+
+  - For example, $e^\beta$ does not have the interpretation of the average Odds Ratio (OR) for a unit increase in follow-up.
+
+  - The parameters are **<span style="color:red">conditional on the random effects</span>**.
+- Considers the effect of predictors while accounting for variability between groups due to random effects.
+
+---
+
+#### GLMMs in R
+
+
+- **Packages: <span style="color:red">lme4</span> and <span style="color:red">GLMMadaptive</span>**
+
+- The function that fits GLMMs in <span style="color:red">lme4</span> is `glmer()` 
+  - this has similar syntax as the `lmer()` function that fits linear mixed models, namely:
+
+  - `formula`: specifying the <span style="color:red">response vector</span>, the <span style="color:red">fixed- and random-effects structure</span>
+
+  - `data`: a <span style="color:red">data frame</span> containing all the variables
+
+  - `family`: specifying the <span style="color:red">distribution of the outcome</span> and the <span style="color:red">link function</span>
+
+  - `nAGQ`: the <span style="color:red">number of quadrature points</span>
+
+---
+
+#### GLMMs in R: lme4
+
+- Fits a mixed effects logistic regression for Toenail data with random intercepts and 15 quadrature points for the adaptive Gauss-Hermite rule:
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(lme4)
+glmmFit <- glmer(y ~ treatn*time + (1 | idnum), family = binomial(), 
+                 data = toenail, nAGQ = 15)
+summary(glmmFit)
+```
+
+---
+
+#### GLMMs in R: GLMMadaptive
+
+- The function that fits GLMMs in <span style="color:blue">GLMMadaptive</span> is `mixed_model()`. To fit the same model as we did above with `glmer()`, the code is:
+
+```{r, message=FALSE, warning=FALSE}
+library(GLMMadaptive)
+glmmFit2 <- mixed_model(y ~ treatn*time, random = ~ 1 | idnum, 
+             family = binomial(), data = toenail, nAGQ = 15)
+summary(glmmFit2)
+```
+
+---
+
+#### GLMMs in R
+
+- Differences between <span style="color:blue">glmer()</span> (package <span style="color:blue">lme4</span>) and <span style="color:blue">mixed_model()</span> (package <span style="color:blue">GLMMadaptive</span>):
+
+- <span style="color:blue">glmer()</span> only provides the adaptive Gaussian quadrature rule for the random intercepts case, whereas <span style="color:blue">mixed_model()</span> uses this integration method with several random terms.
+
+- <span style="color:blue">mixed_model()</span> currently only handles a single grouping factor for the random effects, i.e., you cannot fit nested or crossed random effects, whereas such designs can be fitted with <span style="color:blue">glmer()</span>.
+
+- <span style="color:blue">mixed_model()</span> can fit zero-inflated Poisson and negative binomial data, allowing for random effects in the zero part.
+
+---
+
+#### Model building
+
+- Model building for <span style="color:blue">GLMMs</span> proceeds in the same manner as for <span style="color:blue">LMMs</span>, i.e.:
+
+- We start with an elaborate specification of 
+ 
+  - the <span style="color:blue">fixed-effects structure</span> that contains all the variables we wish to study, and 
+ 
+  - potential <span style="color:blue">nonlinear</span> and <span style="color:blue">interaction terms</span>.
+
+- Following that, we build up the <span style="color:blue">random-effects structure</span>, 
+ 
+   - starting from <span style="color:blue">random intercepts</span>, and then potentially 
+ 
+   - including <span style="color:blue">random slopes</span>, <span style="color:blue">quadratic slopes</span>, etc.
+
+
+- At each step, we perform **<span style="color:red">Likelihood Ratio Tests (LRTs)</span>** to determine if including the additional random effect improves the fit of the model.
+
+---
+
+#### Model Building----(2)
+
+- After choosing the <span style="color:blue">random-effects structure</span>, we return to the <span style="color:blue">fixed effects</span> and assess whether the specification can be <span style="color:red">simplified</span>.
+
+- Once again, we start by testing <span style="color:blue">complex terms</span> 
+   - i.e., interactions and nonlinear terms), and 
+   
+   - then proceed to **<span style="color:red">drop explanatory variables</span>** if required.
+
+- In practice, quite often, and especially for <span style="color:blue">dichotomous data</span>, extending the <span style="color:blue">random-effects structure</span> may lead to 
+<span style="color:blue">numerical/computational problems</span>
+
+  – This is because <span style="color:blue">dichotomous data</span> contain the least amount of information
+
+- Hence, for <span style="color:blue">dichotomous data</span> and when we have few to moderate number of **<span style="color:red">repeated measurements</span>** per subject, we often can only fit **<span style="color:blue">random intercepts models</span>**
+
+---
+
+#### Pros and Cons of GLMMs
+
+**<span style="color:red"> Advantages</span>**
+
+- Possible to have a more complex variance component
+  structures (multi-level models, random regression).
+
+- Fully specified models allow for e.g. power calculations.
+
+- Likelihood inference inherently handles data that are missing at random optimally.
+
+**<span style="color:red"> Drawbacks</span>**
+
+- More model assumptions, thus <span style="color:blue">higher risk of misspecification</span>.
+
+- <span style="color:blue">Impossible to check assumptions about the random effects</span>.
+
+- **Computationally infeasible when the number of random effects or the overall size of the data becomes large.**
+
+---
+
+#### Comparision of GEE and GLMM
+
+**Normally distributed outcomes:**
+
+- Variance component model with <span style="color:blue">random intercept</span> is the same
+  as a <span style="color:blue">repeated measurements model</span> with compound symmetry
+  covariance pattern.
+
+**Other-than-normal type outcomes:**
+
+- <span style="color:red">GEE</span> and <span style="color:red">GLMMs</span> are inherently different statistical methods!
+
+- They differ in <span style="color:red">interpretation</span>.
+
+- They differ in actual figures, i.e. <span style="color:red">estimates</span> and <span style="color:red">SEs</span>.
+
+---
+
+**Comparison using the Jimma Infant Data**
+
+The response variable is categorized body mass index.
+
+$$Y_{ij} = \begin{cases}
+1 & \text{if } weight \leq 2500 \\
+0 & \text{otherwise}
+\end{cases}$$
+
+The following model is assumed for the mean structure:
+
+$$Y_{ij} | b_i \sim \text{Bernoulli}(\pi_{ij}), \text{ for subject } i \text{ and measurement } j,$$
+Exchangeable correlation (or CS)
+
+$$Y_{ij} \sim \text{Bernoulli}(\pi_{ij})$$
+$$\text{logit}(\pi_{ij}) = \color{blue}{\beta_0} + \color{green}{\beta_1 Age_{ij}} + \color{red}{\beta_2 Gender_i} + \color{purple}{\beta_3 Gender_i Age_{ij}}$$
+
+$Gender_i$ is a gender indicator.
+$Age_{ij}$ is age of the $i^{th}$ infant at time $j$ (also the time variable).
+
+---
+
+**Fitting GEE model**
+
+- using **unstructured** working corelation
+```{r, message=FALSE}
+fit1 <- geeglm(BMIBIN ~ sex + age + sex * age, id = ind, data = Infant, 
+               family = binomial, corstr = "exchangeable", scale.fix = TRUE)
+```
+
+**Fitting GLMM model**
+
+- $Y_{ij} | b_i \sim \text{Bernoulli}(\pi_{ij})$, for subject $i$ and measurement $j$,
+- random intercepts $b_i$, i.e., $b_i \sim N(0, d)$, can be included to capture the correlation.
+
+The logit of $\pi_{ij}$ is modeled as:
+
+$$\text{logit}(\pi_{ij}) =  \color{blue}{\beta_0} + \color{green}{\beta_1 Age_{ij}} + \color{red}{\beta_2 Gender_i} + \color{purple}{\beta_3 Gender_i Age_{ij}} + \color{magenta}{b_i}$$
+```{r, message=FALSE}
+fitGLMM <- glmer(BMIBIN ~ sex + age + sex * age + (1 | ind),
+                 data = Infant, family = binomial(link = "logit"), nAGQ = 25)
+#print(round(summary(fitGLMM)$coefficients, 3))
+```
+
+---
+
+#### Jimma infant: GEE vs GLMM Estimates
+
+Regression coefficients are highly similar (a mathematical truth).
+GLMM estimates a smaller intercept than GEE.
+
+| Method | Parameter | Estimate (SE) | P-value |
+|--------|-----------|---------------|---------|
+| GEE    | Intercept | -1.869(0.112) | -       |
+|        | Sex       | 1.133 (0.154) | 0.388   |
+|        | age       | 0.001 (0.015) | 0.925   |
+|        | Sex*age   | -0.017 (0.021)| 0.435   |
+| GLMM   | Intercept | -2.333 (0.127)| -       |
+|        | Sex       | 0.159 (0.164) | 0.331   |
+|        | Sex*age   | 0.002 (0.015) | 0.895   |
+|        | Sex*age   | -0.020 (0.021)| 0.333   |
+
+
+- Should we prefer GLMM for this reason?
+
+---
+
+#### Model with random intercept and slope
+
+The model with random intercept and slope can be fitted similarly. The following model is assumed for the mean structure:
+
+- $Y_{ij} | b_i \sim \text{Bernoulli}(\pi_{ij})$, for subject $i$ and measurement $j$
+- Gaussian distributed random intercepts $b_i$, i.e., $(b_{0i}, b_{1i}) \sim \text{N}(0, D)$, can be included to capture the correlation.
+
+The logit of the probability $\pi_{ij}$ is given by:
+
+$$\text{logit}(\pi_{ij}) = \color{blue}{\beta_0} + \color{green}{\beta_1 Age_{ij}} + \color{orange}{\beta_2 Gender_i} + \color{purple}{\beta_3 Gender_i Age_{ij}} + \color{red}{b_{0i}} + \color{teal}{b_{1i} Age_{ij}}$$
+---
+
+#### Random intercept and slope model:
+
+```{r, message=FALSE, warning=FALSE}
+fitGLMMSlope <- glmer(BMIBIN~ sex + age + sex*age + (1+age|ind),
+data = Infant, family = binomial(link = "logit"))
+print(round(summary(fitGLMMSlope)$coefficients, 3))
+# Extracting variance components for random effects
+print(VarCorr(fitGLMMSlope))
+```
+---
+
+#### Marginal model or GLMM – which should I prefer?
+
+**Conceptual differences**
+
+- **<span style="color:blue">Population Risk</span> vs <span style="color:blue">Individual Risk:</span>**
+  - <span style="color:blue">Marginal Model</span> focuses on population-level risk.
+  - <span style="color:blue">GLMM</span> accounts for individual-level risk.
+
+- Choose a model that answers your scientific question:
+
+- **<span style="color:cyan">Modeling differences</span>**
+
+   - Covariance pattern or random effects model?
+   - **<span style="color:red">GEE</span>** is more robust regarding model variations:
+   - Choose a model that is realistic for your data:
+
+- **<span style="color:cyan">Computational differences</span>**
+
+  - Handling of missing data is easier in **<span style="color:red">GLMMs:</span>**
+  - GLMMs become infeasible with large Data:
+  - GEE standard errors are biased in small data:
+  - Choose a model that can handle your data:
+
+---
+class: inverse,  middle
+
+# Day 4
+
+## Missing Data Management
+
+* What is missing data 
+   – definition, patterns, mechanisms (MCR, MR, NMR)
+
+* Simple methods for handling missing data
+
+* Multiple Imputation (MI) based procedures
+
+* Weighted GEE
+
+---
+
+#### Introduction
+
+- **<span style="color:red">Missing data:</span>** Absence of recorded information for certain observations or variables in a dataset.
+
+- Missing data is very common in statistical analysis. 
+
+- **<span style="color:red">Challenges:</span>** Biased results, reduced statistical power, loss of information in analysis.
+
+- **<span style="color:red">Impact:</span>** Requires careful handling to avoid misleading conclusions.
+
+- **<span style="color:red">Importance:</span>** Addressing missing data ensures accurate and reliable data analysis and interpretation.
+
+---
+
+#### Sources of Missing Data
+
+- <span style="color:red">Non-Response:</span> Participants don't provide certain information.
+
+- <span style="color:red">Loss to Follow-Up:</span> Participants drop out of a study before completion.
+
+- <span style="color:red">Measurement Error:</span> Errors during data collection lead to missing values.
+
+- <span style="color:red">Skip Patterns:</span> Questions skipped based on previous responses.
+
+- <span style="color:red">Data Entry Mistakes:</span> Errors during data entry or coding.
+
+- <span style="color:red">Equipment Failure:</span> Instruments or equipment malfunction during data collection.
+
+- <span style="color:red">Sensitive Data:</span> Participants omit sensitive information.
+
+- <span style="color:red">Study Design:</span> Data collection methods inherently result in gaps.
+
+- <span style="color:red">Natural Causes:</span> Unforeseen events impacting data collection.
+
+- <span style="color:red">Processing Errors:</span> Errors during data processing or transformation.
+
+---
+
+#### Implications of Missing Data
+
+**Missing Data Produces/Induces:**
+
+- Loss of information and <span style="color:blue">reduced efficiency.</span>
+
+**Extent of Information Loss Depends on:**
+
+- <span style="color:red">Amount of missingness.</span>
+- <span style="color:red">Missingness pattern.</span>
+- <span style="color:red">Association between the missing and observed data.</span>
+- <span style="color:red">Parameters of interest.</span>
+- <span style="color:red">Method of analysis.</span>
+
+**Care is Needed to Avoid Biased Inferences:**
+
+- Inferences that target a <span style="color:purple">reference population other than intended.</span>
+- For example, <span style="color:purple">those who stay in the study.</span>
+---
+
+#### How Much Missing Data is "Problematic"?
+
+Depends on who you ask...
+
+- **Answer #1:**
+  - ANY amount of missing data might be considered problematic.
+
+- **Answer #2:**
+  - It's never "too much."
+  - Optimal methods can easily accommodate up to 50% missing data.
+
+.pull-left[
+- **Answer #3:**
+  - $>5$% (Schafer, 1999)
+  - $>10$% (Bennett, 2001)
+  - $>20$% (Peng, et al., 2006)
+]
+.pull-right[
+- **Answer #4 (Widaman, 2006):**
+  - 1%-2% (Negligible)
+  - 5%-10% (Minor)
+  - 10%-25% (Moderate)
+  - 25%-50% (High)
+  - $>50$% (Excessive)
+]
+
+---
+
+#### What to Consider
+
+- **<span style="color:red">Dealing with missing data requires considering</span>** **<span style="color:purple">the missing data patterns</span>**, **<span style="color:purple">mechanisms</span>**, **<span style="color:purple">proportion</span>**, and the chosen analytic approach.
+
+- <span style="color:blue">Missing data pattern:</span> examine the missing data pattern,(monotone, intermittent, or arbitrary structure), can guide the selection of suitable methods.
+
+- <span style="color:blue">Proportion of Missing data:</span> High levels of missingness may impact the validity of analyses and may require more sophisticated handling techniques.
+
+- <span style="color:blue">Reasons for missing data:</span> identifying the reasons can help mitigate potential biases.
+
+- Ensure robust analyses in longitudinal studies when there is missing data.
+
+---
+
+#### Missing Data in Longitudinal Studies
+
+
+**<span style="color:purple">Monotone Missing Data Pattern</span>**
+
+- Missing data follows a consistent direction (either always increasing or always decreasing) across observations.
+
+- Common in longitudinal studies where participants drop out progressively over time.
+
+- May arise due to systematic reasons such as treatment effects or participant attrition.
+
+- Example: Participants dropping out of a study as time progresses. 
+
+| Study | Time1 | Time2 | Time3 |
+|-------|-------|-------|-------|
+| 1     | X     | X     | X     |
+| 2     | X     | X     | .     |
+| 3     | X     | .     | .     |
+
+---
+
+**<span style="color:purple">Intermittent/Arbitrary Missing Data Pattern</span>**
+
+- Missing data occurs randomly or sporadically across observations without a consistent direction.
+
+- Common in cross-sectional and longitudinal studies where participants may miss data points randomly.
+
+- Can arise due to factors like random non-response or data collection errors.
+
+- Example: Participants missing certain measurements for various reasons at different time points.
+
+
+| Study | Time1 | Time2 | Time3 |
+|-------|-------|-------|-------|
+| 1     | X     | X     | X     |
+| 2     | X     | .     | X     |
+| 3     | .     | X     | X     |
+| 4     | .     | .     | X     |
+| 5     | .     | X     | .     |
+
+---
+
+#### Comparison:
+
+**Data Collection Context:**
+- Monotone: Often observed in longitudinal studies.
+- Intermittent: Can occur in various study designs.
+
+**Handling:**
+- Monotone: Some methods like FOCF might be suitable.
+- Intermittent: Requires more flexible imputation methods or techniques that account for random missingness.
+
+**Bias:**
+- Monotone: Biases can occur if the assumption of similarity between consecutive observations is violated.
+- Intermittent: Imputed values might not be as biased as long as missingness is random.
+
+---
+
+#### Types of Missing Data
+
+- Looking carefully the causes of missingness enable us to employee the **appropriate missing data management system**.
+
+  - Estimation of the parameter with missing data depends on the missing data mechanism. 
+
+- The missing data mechanism is a probability model for missingness. 
+- Data is often described in accordance to **the reasons for the missing data**. 
+
+- According to the mechanisms of missingness, we assume **three types** of missing data.
+  - **<span style="color:orange">Missing Completely at Random (MCAR)</span>**
+  
+  - **<span style="color:orange">Missing at Random (MAR)</span>**
+  
+  - **<span style="color:orange">Not Missing at Random (NMAR)</span>**
+
+---
+
+#### 1. Missing Completely at Random (MCAR)
+
+- In MCAR, missingness is assumed to be **<span style="color:red">independent</span> of both observed and unobserved data**.
+
+- The notation of the MCAR mechanism is expressed as follows:
+
+$$\color{red}{p(R|Y) = p(R|Y^{obs}, Y^{mis}) = p(R)}$$
+
+- Where:
+
+  - $Y$ is a vector of partially observed data, that is, $Y =(Y^{obs}, Y^{mis})$.
+  
+  - $R$ is a set of missing indicators, i.e., $R = 1$ if the $j^{th}$ element of $Y$ is observed, and $R = 0$ if the  $j^{th}$ element of $Y$ is missing (Rubin, 1976).
+
+- MCAR is also known as **ignorable missing** in statistical inference.
+
+---
+
+**<span style="color:red">Examples of MCAR data include:</span>**
+
+- Data with missing values due to equipment failure.
+
+- Samples lost in transit.
+
+- Data that is technically unsatisfactory.
+
+**<span style="color:purple"> Characteristics of MCAR:</span>**
+
+- The missing data does not introduce any bias in statistical analyses.
+
+- Estimated parameters are not biased as a result of the missing data.
+
+**<span style="color:red"> Challenges of MCAR:</span>**
+  - Statistical power may be decreased due to the loss of information from the missing data.
+
+---
+
+#### 2. Missing at Random (MAR)
+
+- Missingness depends only on observed components $Y^{obs}$, not on missing components $Y^{mis}$.
+  - Expressed through the formula:
+  
+$$\color{red}{p(R|Y^{obs}, Y^{mis}) = p(R|Y^{obs})}$$
+  
+  - The missingness pattern is completely determined by the observed data.
+  
+  - The missingness mechanism does not depend on the actual missing values.
+
+ - The missing data mechanism can be ignored in likelihood inference 
+      - **Ignorable Missing Data Mechanism**
+
+ - Estimates of parameters remain unbiased even with missing data.
+ 
+---
+
+- Examples
+ 
+ - study protocol requires patients whose response value exceeds a threshold to be removed from the study
+ - physicians give rescue medication to patients who do not respond to treatment
+ 
+Features of <span style="color: red;">MAR</span> include:
+
+- The observed data cannot be considered a random sample from the target population.
+- Not all statistical procedures provide valid results under <span style="color: red;">MAR</span>.
+
+| **<span style="color: red;">Not Valid under MAR</span>** | **<span style="color: green;">Valid under MAR</span>** |
+|-------------------------------------------------------|-----------------------------------------------------|
+| Sample Marginal Evolutions                             | Sample Subject-Specific Evolutions                   |
+| Methods Based on Moments                               | Likelihood-Based Inference                           |
+| Mixed Models with Misspecified Correlation Structure  | Mixed Models with Correctly Specified Correlation Structure |
+| Marginal Residuals                                     | Subject-Specific Residuals                           |
+
+---
+
+
+#### 3. Not Missing at Random (NMAR)
+
+- NMAR suggests that the probability of a value being missing fluctuates for <span style="color:red">reasons unknown to us</span>.
+
+- NMAR occurs when the characteristics of missing data do not meet those of MCAR and MAR mechanisms.
+- In NMAR, the probability of missingness is influenced by both the <span style="color:red">observed value</span> $(Y^{obs})$ and the <span style="color:red">unobserved missing value</span> $(Y^{mis})$.
+
+- The NMAR missing data mechanism can be represented by the following equation:
+$$p(R | Y^{obs}, Y^{mis}) = p(R | Y^{obs}, Y^{mis})$$
+
+- Due to the presence of this dependency, NMAR is considered a <span style="color:red">non-ignorable missing data mechanism</span>.
+
+- Real-world examples are often subtle and <span style="color: blue;">challenging to identify</span>.
+
+---
+
+Examples
+
+- in studies on drug addicts, people who return to drugs are less likely than others
+to report their status
+- in longitudinal studies for quality-of-life, patients may fail to complete the
+questionnaire at occasions when their quality-of-life is compromised
+
+Features of <span style="color: red;">MNAR</span> include:
+
+- The observed data cannot be considered a random sample from the target population.
+
+- Only procedures that explicitly model the joint distribution ${y_i^o, y_i^m, R}$ provide valid inferences.
+
+- **<span style="color: red;">Analyses that are valid under MAR will not be valid under MNAR.</span>**
+
+- We cannot distinguish from the data at hand whether the missing data mechanism is MAR or MNAR
+   - We can distinguish between MCAR and MAR
+
+- often use **<span style="color:red">sensitivity analyses</span>** and model-based imputation techniques.
+
+---
+
+**Common Methods of Missing Data Treatments for Longitudinal Data**
+
+- **<span style="color: red;">Simple Methods</span>**
+     - **Complete Case Analysis**: Analyzing only cases with <span style="color: red;">complete data at all time points</span>.
+     - **Last Observation Carried Forward (LOCF)**: Imputing missing values with <span style="color: red;">last observed value</span>.
+
+- **<span style="color: red;">Modern Methods</span>**
+    - **Multiple Imputation**: Generating <span style="color: green;">multiple plausible imputed datasets</span>.
+      - Captures uncertainty, provides <span style="color: green;">accurate parameter estimates</span>.
+     
+     - **Likelihood-based Methods**: Uses <span style="color: blue;">full likelihood with missing data mechanism specified</span>.
+      - Requires <span style="color: blue;">correct model specification</span>, might be <span style="color: blue;">complex for large datasets</span>.
+    
+    - **Weighted GEE (Generalized Estimating Equations)**: <span style="color: purple;">Accounts for correlation in repeated measurements</span>.
+      - Weighted analysis, effective for <span style="color: purple;">longitudinal studies</span>.
+      
+---
+
+**<span style="color: red;">Simple Methods</span>**
+
+**Complete Case Analysis**
+
+   - <span style="color: red;">Discards valuable information</span>, can lead to <span style="color: red;">biased results if missingness is related to unobserved variables</span>.
+
+- The most commonly used approach that data scientists use to deal with missing data is to simply omit cases with missing data, only analysing the rest of the dataset. 
+- This method is known as listwise deletion or complete-case analysis.
+
+- The **<span style="color:magenta"> na.omit()</span>** function in R removes all cases with one or more missing data values in a dataset.
+
+---
+
+**Complete Case Analysis**
+
+Example for *Complete Case Analysis (Listwise Deletion)* example using the `HIVdata` dataset.
+
+First lets explore the missing value and pattern using 
+
+
+```{r, message=FALSE, warning=FALSE}
+library(readr); library(naniar)
+HIVdata <- read_csv("Data/HIVdata.csv")
+#miss_var_summary(HIVdata)
+miss_var_table(HIVdata)
+```
+
+---
+- We can also look the missing pattern at each time point 
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+HIVdata %>% select(cd4, time) %>% group_by(time) %>% miss_var_summary()
+```
+
+---
+
+- Now fit a linear mixed-effects model to the complete data:
+
+.pull-left[
+- **<span style="color: red;">Before remove na's</span>**
+```{r}
+fit1 <- lmer(cd4 ~ time + (1 | id), 
+             data = HIVdata)
+summary(fit1)
+```
+]
+
+.pull-right[
+- **<span style="color: red;">After removal na's</span>**
+```{r}
+cc_data <- na.omit(HIVdata)
+cc_model<- lmer(cd4 ~time +(1|id), 
+              data = cc_data)
+summary(cc_model)
+```
+]
+
+---
+
+- **Last Observation Carried Forward (LOCF) Method**
+
+  - **Replace Missing Values**: In LOCF, missing values are <span style="color: blue;">imputed by carrying forward the last observed value</span>. 
+        - Assumes unrealistic constant profile after dropout, introduces <span style="color: red;">bias</span>.
+  - **Bias Concerns**: LOCF **<span style="color: red;">introduces bias</span>** by assuming the last observed value accurately represents the participant's status. However, this disregards potential changes or fluctuations after the last observation, impacting analysis validity and conclusions.
+
+- To perform the LOCF imputation method, we simply run the 
+  - **<span style="color:orange">fill()</span>** function from the tidyr package on the dataset and the variable with the missing data.
+  - **<span style="color:magenta">lna.locf()</span>** function in zoo
+
+---
+
+```{r, warning=FALSE, message=FALSE}
+library(zoo)
+LOCF_data2 <- na.locf(HIVdata)
+model_locf2 <- lmer(cd4 ~ time + (1 | id), data = LOCF_data2)
+summary(model_locf2)
+```
+
+---
+
+#### Mean Imputation in Longitudinal Data
+
+- **Mean Imputation**: A <span style="color: blue;">simple method</span> to handle missing values in longitudinal data.
+
+- **Approach**: Replace missing values with the <span style="color: green;">mean of the observed values</span> for the same variable across time points.
+
+- **<span style="color: green;">Simple and straightforward method</span>** to handle missing values.
+- Easy to implement and **<span style="color: green;">interpret</span>**.
+- **<span style="color: green;">Maintains the structure</span>** of the dataset.
+
+- May **<span style="color: red;">introduce bias</span>** if the missing data mechanism is not missing completely at random (MCAR).
+- Does not account for individual variation or trends over time.
+- Reduces **<span style="color: red;">variability in the imputed variable</span>**, potentially underestimating uncertainty.
+
+---
+
+#### Example
+
+```{r}
+library(dplyr)
+# Replace missing values with cd4 means
+imputed_data <- HIVdata %>%  group_by(id) %>%
+  mutate(cd4 = ifelse(is.na(cd4), mean(cd4, na.rm = TRUE), cd4))
+model_mean_imputed <- lmer(cd4 ~ time + (1 | id), data = imputed_data)
+summary(model_mean_imputed)
+```
+
+
+---
+
+### Multiple Imputation
+
+- Multiple imputation is a process that is done in 3 main steps: **<span style="color:blue"Imputation, analysis, and pooling.</span>**
+
+- This gives the imputed data a valid statistical inference.
+
+<span style="color:red">Steps for Multiple Imputation:</span>
+
+- Firstly, generate m multiple imputed datasets.
+
+- Secondly, analyze each imputed dataset, then there should be m analyses.
+
+- Lastly, combine the results for the pooled dataset.
+
+- Multiple imputation is robust to small sample sizes or lots of missing data.
+
+---
+
+- Steps in applying multiple imputation to missing data via the `mice` approach
+
+```{r savedplot, out.width='60%', fig.align='center', echo=FALSE}
+knitr::include_graphics("Image/MI.png")
+```
+
+- The estimate of the parameter $\beta$ is simply the average of each parameter estimate $\beta^m$ obtained over the m imputed datasets (m = 1, ..., M):$$\hat{\beta}^* = \frac{1}{M}\sum_{m=1}^M \hat{\beta}^m$$
+
+---
+
+- The variance of the estimator is partitioned into within imputation variance (sampling variability), and the between imputation variance (estimation variability due to missing data).
+
+- The within imputation variance, $W_{\beta}$, over the m imputed datasets is:
+$$W_{\beta}= \frac{\sum_{m=1}^M SE_{\beta}^2}{M}$$
+- The between imputation variance, $B_{\beta}$, over the m imputed datasets is: $$B_{\beta}= \frac{\left(\sum_{m=1}^M\left(\hat{\beta}^m-\hat{\beta}^*\right)^2\right)}{M-1}$$
+
+- These two variances are combined to provide a single variance, given by
+$$T_{\beta}=W_{\beta}+ \left[\frac{(M+1)}{M}\right] B_{\beta}$$
+
+---
+
+- Let's look at it using the mice() function 
+
+```{r, warning=FALSE, message=FALSE}
+library(mice)
+data.mice <- mice(HIVdata, m=5, method = "pmm", printFlag=FALSE, print = FALSE)
+```
+
+- m=5 is to generate 5 imputed data,
+
+- different prediction model was used for different type of variable
+    
+   - pmm: predicted mean matching
+   - logreg: logistic regression
+   - polr: ordinal logistic regression
+
+- usually, one needs only 5 replicates for model building/testing, 20 to 100 for final model
+
+---
+
+```{r, message=FALSE,warning=FALSE}
+library(broom.mixed)
+mice.fit <- with(data.mice, lmer(cd4 ~ time + (1 | id)))
+summary(pool(mice.fit))
+```
+
+---
+
+- Now we can extract the completed dataset using the complete() function. 
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyr)
+impdata <- mice::complete(data.mice, action = "long", inc = F)
+#View(impdata)
+```
+
+- The missing values have been replaced with the imputed values in the first of the five datasets. 
+
+---
+
+#### Multiple Imputation Software 
+
+- **`Amelia`** in R (by Gary King and collaborators)
+- **`mi`** in R (by Andrew Gelman and collaborators)
+- **`mice`** in R (by Stef van Buuren and collaborators) 
+- SPSS **`(Analyze > Multiple Imputation)`**
+- STATA  **mi `estimate`**
+
+
+

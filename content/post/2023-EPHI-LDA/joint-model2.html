@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title> Joint Modeling of Longitudinal and Survival Outcomes </title>
+    <meta charset="utf-8" />
+    <meta name="author" content=" Yebelay Berehan " />
+    <script src="joint-model2_files/header-attrs/header-attrs.js"></script>
+    <link href="joint-model2_files/remark-css/default.css" rel="stylesheet" />
+    <link href="joint-model2_files/remark-css/rladies-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, title-slide
+
+.title[
+# <p><span style="color:white"> Joint Modeling of Longitudinal and Survival Outcomes </span></p>
+]
+.author[
+### <span style="color:#38BDDE"> Yebelay Berehan </span>
+]
+.institute[
+### <p><span style="font-size: 80%;"> Ethiopian Public Health Institute (EPHI)
+National Data Management Center for Health (NDMC)</span></p>
+]
+.date[
+### <p><span style = 'font-size: 50%;'> August 24-27, 2023</p>
+]
+
+---
+
+
+
+
+<div>
+<style type="text/css">.xaringan-extra-logo {
+width: 95px;
+height: 95px;
+z-index: 0;
+background-image: url(Slides/Images/tidyverse.png);
+background-size: contain;
+background-repeat: no-repeat;
+position: absolute;
+top:1em;right:1em;
+}
+</style>
+<script>(function () {
+  let tries = 0
+  function addLogo () {
+    if (typeof slideshow === 'undefined') {
+      tries += 1
+      if (tries < 10) {
+        setTimeout(addLogo, 100)
+      }
+    } else {
+      document.querySelectorAll('.remark-slide-content:not(.title-slide):not(.inverse):not(.hide_logo)')
+        .forEach(function (slide) {
+          const logo = document.createElement('div')
+          logo.classList = 'xaringan-extra-logo'
+          logo.href = null
+          slide.appendChild(logo)
+        })
+    }
+  }
+  document.addEventListener('DOMContentLoaded', addLogo)
+})()</script>
+</div>
+
+
+
+
+### &lt;span style="color: #008080;"&gt;Joint Models for Longitudinal and Time-to-Event Data&lt;/span&gt;
+
+- What is &lt;span style="color: #800000;"&gt;Joint Modelling?&lt;/span&gt;
+
+- a &lt;span style="color: #2ca02c;"&gt;joint modeling approach&lt;/span&gt; to analyze two types of outcomes often observed in longitudinal studies:
+ 
+  - A set of &lt;span style="color: #2ca02c;"&gt;longitudinal response measurements&lt;/span&gt;.
+  - The &lt;span style="color: #2ca02c;"&gt;time to an event&lt;/span&gt; of interest, such as default, death, etc.
+
+- Traditionally, these two outcomes have been analyzed separately:
+ 
+  - Using a &lt;span style="color: #2ca02c;"&gt;mixed effects model&lt;/span&gt; for the longitudinal response.
+  - A &lt;span style="color: #2ca02c;"&gt;survival model&lt;/span&gt; for the time-to-event.
+
+- However, in this section, we will explore how these outcomes can be &lt;span style="color: #2ca02c;"&gt;analyzed jointly&lt;/span&gt;.
+
+---
+
+**&lt;span style="color: #1f77b4;"&gt;Overview of survival or time to event&lt;/span&gt;**
+
+- Survival analysis is a set of &lt;span style="color: #2ca02c;"&gt;statistical techniques&lt;/span&gt; designed for analyzing data where the outcome variable is the time until an event occurs. 
+
+- This event time is often referred to as &lt;span style="color: #2ca02c;"&gt;failure time&lt;/span&gt;, &lt;span style="color: #2ca02c;"&gt;survival time&lt;/span&gt;, or &lt;span style="color: #2ca02c;"&gt;event time&lt;/span&gt;.
+
+- &lt;span style="color: #2ca02c;"&gt;Survival time&lt;/span&gt; signifies the time from a specific starting point (e.g., treatment initiation) to a particular endpoint (time-to-event).
+
+
+- &lt;span style="color: #1f77b4;"&gt;Time, Time Origin, Time Scale, Event&lt;/span&gt;
+
+In survival analysis, the definition of an individual's &lt;span style="color: #2ca02c;"&gt;failure time&lt;/span&gt; requires three elements:
+
+1. **Time Origin**: The starting point for measuring time.
+2. **Time Scale**: The units used for measuring time (e.g., years, months, days).
+3. **Event**: The specific occurrence of interest (e.g., death, disease incidence, default).
+---
+
+- For biomedical applications, this could involve events like &lt;span style="color: #ff7f0e;"&gt;death&lt;/span&gt; or &lt;span style="color: #ff7f0e;"&gt;disease incidence&lt;/span&gt;.
+- In fields like credit scoring, it might be &lt;span style="color: #ff7f0e;"&gt;default&lt;/span&gt;, and in engineering, it could be &lt;span style="color: #ff7f0e;"&gt;component failure&lt;/span&gt;.
+
+When considering multiple events, such as various causes of death, the problem can involve &lt;span style="color: #ff7f0e;"&gt;recurrent events&lt;/span&gt; or &lt;span style="color: #ff7f0e;"&gt;competing risks&lt;/span&gt;.
+
+**&lt;span style="color: #1f77b4;"&gt;Goals of Survival Analysis&lt;/span&gt;**
+
+The primary objectives of survival analysis include:
+
+1. &lt;span style="color: #2ca02c;"&gt;Estimating Time-to-Event:&lt;/span&gt; estimate the time it takes for an event to occur for a &lt;span style="color: #ff7f0e;"&gt;group of individuals&lt;/span&gt;. 
+
+2. &lt;span style="color: #2ca02c;"&gt;Comparing Time-to-Event &lt;/span&gt; between &lt;span style="color: #ff7f0e;"&gt;two or more groups&lt;/span&gt;. 
+
+3. &lt;span style="color: #2ca02c;"&gt;Assessing Covariate Relationships:&lt;/span&gt; to assess how &lt;span style="color: #ff7f0e;"&gt;covariates&lt;/span&gt; relate to the time-to-event. 
+---
+
+### &lt;span style="color:blue"&gt;Censoring&lt;/span&gt;
+
+- The distinguishing feature of survival analysis is that it incorporates a phenomenon called censoring. 
+
+- Censoring occurs when we have some information about individual survival time, but we don’t know the time exactly.
+
+
+&lt;img src="Image/censor.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### &lt;span style="color:blue"&gt;Kaplan-Meier (KM) Curves:&lt;/span&gt;
+
+- a graphical representation of the estimated survival probability over time.
+- visualize how the survival probability changes as time progresses.
+- typically stratified by different groups, allowing comparisons between these groups.
+
+### &lt;span style="color:red"&gt;Log-Rank Test:&lt;/span&gt;
+
+- The Log-Rank test is statistical test used to compare the survival distributions of two or more groups.
+- It assesses whether there are significant differences in survival times between the groups.
+- The test is based on comparing the observed number of events and expected number of events under the null hypothesis of equal survival distributions.
+
+---
+
+### &lt;span style="color:blue"&gt;Pros and Cons of the Kaplan-Meier Estimator&lt;/span&gt;
+
+ &lt;span style="color:green"&gt;Pros:&lt;/span&gt;
+
+- It is commonly used to describe survival.
+- It is commonly used to compare two study populations.
+- It provides an intuitive graphical presentation of survival data.
+
+&lt;span style="color:red"&gt;Cons:&lt;/span&gt;
+
+- It is mainly descriptive in nature.
+- It does not control for covariates or other factors that may influence survival.
+- It cannot accommodate time-dependent variables in its basic form.
+
+
+---
+
+### The Cox Proportional Hazard Model
+
+- The Cox proportional hazard model provides the following benefits:
+
+- Adjusts for multiple risk factors simultaneously.
+
+- Allows quantitative (continuous) risk factors, helping to limit the number of strata.
+
+- Provides estimates and confidence intervals of how the risk changes across the strata and across unit increases in quantitative variables.
+
+- Can handle data sets with right censoring, staggered entry, etc.; so long as we have adequate data at each time point.
+
+---
+
+- The proportional hazard function has the form:
+
+- `\(h(t) = h_0(t) e^{\beta_1 x_1 + \ldots + \beta_p x_p}\)`
+   Where `\(h_0\)` is the baseline hazard rate, i.e., `\(x_1 = 0, x_2 = 0,\)` etc.
+
+- Note that the ratio of 2 hazard functions does not depend on `\(t\)`.
+
+&lt;img src="Image/coxassumption.png" width="50%" style="display: block; margin: auto;" /&gt;
+---
+
+### Time-Varying Covariates
+
+- Often, there is interest in the association between a time-varying covariate and the risk of an event.
+ 
+  - Treatment changes with time (e.g., dose)
+ 
+  - Time-dependent exposure (e.g., smoking, diet)
+ 
+  - Markers of disease or patient condition (e.g., blood pressure, PSA levels)
+
+**Example: PBC Study**
+
+- In the PBC study, we explore if longitudinal bilirubin measurements are associated with the hazard of death.
+
+---
+
+### &lt;span style="color: #1f77b4;"&gt;Time-Varying Covariates&lt;/span&gt;
+
+- To address our questions of interest, we must formulate a model that connects:
+  - Serum bilirubin levels
+  - Time-to-death
+
+#### &lt;span style="color: #ff7f0e;"&gt;Association with Baseline Marker Levels&lt;/span&gt;
+
+- The connection between baseline marker levels and the risk of death can be assessed using standard statistical methods, such as Cox regression.
+
+#### &lt;span style="color: #2ca02c;"&gt;Study of Time-Varying Covariates&lt;/span&gt;
+
+- When examining time-varying covariates, more careful consideration is essential.
+
+---
+
+### &lt;span style="color: #1f77b4;"&gt;Types of Time-Varying Covariates&lt;/span&gt;
+
+- There are two types of time-varying covariates (Kalbfleisch &amp; Prentice, 2002):
+  - **&lt;span style="color: #ff7f0e;"&gt;External (aka exogenous)&lt;/span&gt;:** The value of the covariate at time point t is not affected by the occurrence of an event at time point u, with t &gt; u.
+  - **&lt;span style="color: #2ca02c;"&gt;Internal (aka endogenous)&lt;/span&gt;:** The covariate is not External.
+
+- &lt;span style="color: #1f77b4;"&gt;Example: External vs. Internal&lt;/span&gt;
+
+- This concept can be challenging to grasp, so let's clarify with an example...
+
+---
+
+#### &lt;span style="color: #1f77b4;"&gt;Example: Asthma Study&lt;/span&gt;
+
+- Let's consider a study on asthma, specifically focusing on the time until an asthma attack for a group of patients.
+
+- We have two time-varying covariates:
+  - **&lt;span style="color: #ff7f0e;"&gt;Pollution levels&lt;/span&gt;**
+  - **&lt;span style="color: #2ca02c;"&gt;A biomarker for asthma&lt;/span&gt;**
+
+#### &lt;span style="color: #1f77b4;"&gt;Pollution Levels and Biomarker&lt;/span&gt;
+
+- Suppose a patient had an asthma attack at a certain time point, denoted as u.
+
+- For the time-varying covariates:
+  - **&lt;span style="color: #ff7f0e;"&gt;Pollution levels:&lt;/span&gt;** The pollution levels at a time point t &gt; u will not be affected by the fact that the patient had an attack at u. (External)
+  - **&lt;span style="color: #2ca02c;"&gt;Biomarker:&lt;/span&gt;** The biomarker level at a time point t &gt; u may be affected by the fact that the patient had an attack at u. (Internal)
+  
+---
+
+#### &lt;span style="color: #1f77b4;"&gt;Distinguishing Covariate Types&lt;/span&gt;
+
+- It's &lt;span style="color: #ff7f0e;"&gt;crucial&lt;/span&gt; to differentiate between these two types of time-varying covariates, as the type of covariate determines the appropriate analysis.
+
+- In our motivating examples, all time-varying covariates are &lt;span style="color: #2ca02c;"&gt;Biomarkers&lt;/span&gt;. These are always &lt;span style="color: #2ca02c;"&gt;endogenous&lt;/span&gt; covariates:
+  
+  - &lt;span style="color: #ff7f0e;"&gt;Measured with error&lt;/span&gt; (i.e., biological variation)
+  
+  - The &lt;span style="color: #ff7f0e;"&gt;complete history is not available&lt;/span&gt;
+  
+  - Existence is &lt;span style="color: #ff7f0e;"&gt;directly related to failure status&lt;/span&gt;
+
+---
+
+### &lt;span style="color: #1f77b4;"&gt;Extension of Cox Model for Time-Varying Covariates&lt;/span&gt;
+
+- The Cox model presented earlier can be extended to handle time-varying covariates using the counting process formulation:
+
+`$$h_i(t | Y_i(t), w_i) = h_0(t)R_i(t) \exp\{ \gamma^T w_i +\color{#2ca02c}{ \alpha y_i(t)} \}$$`
+
+where:
+- `\(\color{blue}{N_i(t)}\)` is a counting process that tracks the number of events for subject `\(i\)` by time `\(t\)`,
+
+- `\(h_i(t)\)` denotes the intensity process for `\(N_i(t)\)`,
+
+- `\(R_i(t)\)` denotes the at-risk process (equals 1 if subject `\(i\)` is still at risk at time `\(t\)`),
+
+- `\(\color{#2ca02c}{y_i(t)}\)`denotes the value of the time-varying covariate for subject `\(i\)` at time `\(t\)`.
+
+
+- This formulation allows for the incorporation of time-varying covariates into the Cox model.
+
+---
+
+#### &lt;span style="color: #1f77b4;"&gt;Interpretation&lt;/span&gt;
+
+The formulation:
+
+`\(h_i(t | Y_i(t), w_i) = h_0(t)R_i(t) \exp\{ \gamma^T w_i + \alpha y_i(t) \}\)`
+
+has the following interpretation:
+- The term `\(\exp(\alpha)\)` denotes the &lt;span style="color: #2ca02c;"&gt;relative increase&lt;/span&gt; in the risk of an event at time `\(t\)` that results from a &lt;span style="color: #ff7f0e;"&gt;one-unit increase&lt;/span&gt; in `\(y_i(t)\)` at the &lt;span style="color: #ff7f0e;"&gt;same time point&lt;/span&gt;.
+
+---
+
+#### &lt;span style="color: #1f77b4;"&gt;Handling Time-Varying Covariates in the Extended Cox Model&lt;/span&gt;
+
+The extended Cox model handles time-varying covariates as follows:
+- It &lt;span style="color: #2ca02c;"&gt;assumes no measurement error&lt;/span&gt;.
+- The covariate path is represented by a &lt;span style="color: #2ca02c;"&gt;step function&lt;/span&gt;.
+- The &lt;span style="color: #2ca02c;"&gt;existence&lt;/span&gt; of the covariate is &lt;span style="color: #2ca02c;"&gt;not related to failure status&lt;/span&gt;.
+
+**&lt;span style="color: #1f77b4;"&gt;Validity of the Extended Cox Model&lt;/span&gt;**
+
+- The extended Cox model is &lt;span style="color: #2ca02c;"&gt;valid&lt;/span&gt; only for &lt;span style="color: #2ca02c;"&gt;exogenous time-varying covariates&lt;/span&gt;.
+
+- Treating &lt;span style="color: #ff7f0e;"&gt;endogenous covariates&lt;/span&gt; as exogenous &lt;span style="color: #ff7f0e;"&gt;may produce spurious results&lt;/span&gt;!
+---
+
+### &lt;span style="color: #1f77b4;"&gt;Joint Modeling Framework&lt;/span&gt;
+
+- To account for the special features of &lt;span style="color: #ff7f0e;"&gt;endogenous covariates&lt;/span&gt;, a new class of models has been developed: **Joint Models for Longitudinal and Time-to-Event Data**.
+
+- The intuitive idea behind these models:
+  1. Use an appropriate model to describe the &lt;span style="color: #2ca02c;"&gt;evolution of the covariate/marker&lt;/span&gt; over time for each patient.
+  2. The &lt;span style="color: #2ca02c;"&gt;estimated evolutions&lt;/span&gt; are then used in a Cox model.
+
+- A key feature of these models is that &lt;span style="color: #2ca02c;"&gt;covariate levels are not assumed constant between visits&lt;/span&gt;.
+
+---
+
+#### &lt;span style="color: #1f77b4;"&gt;Notation&lt;/span&gt;
+
+- Some notation:
+  - `\(\color{#ff7f0e}{T_i^*}\)`: True event time for patient `\(i\)`
+ 
+  - `\(\color{#ff7f0e}{T_i}\)`: Observed event time for patient `\(i\)`
+ 
+  - `\(\color{#ff7f0e}{\delta_i}\)`: Event indicator, i.e., equals 1 for true events
+ 
+  - `\(\color{#2ca02c}{y_i}\)`: Longitudinal covariate
+  
+- We will formulate the joint model in 3 steps – in particular, . . .
+
+---
+
+#### &lt;span style="color: #1f77b4;"&gt;Step 1: Formulation of Joint Model&lt;/span&gt;
+
+- Step 1: Let's assume that we know `\(\color{#ff7f0e}{m_i(t)}\)`, i.e., the true and unobserved value of the covariate at time `\(t\)`.
+
+- With this assumption, we can define a &lt;span style="color: #2ca02c;"&gt;standard relative risk model&lt;/span&gt;:
+
+  `$$h_i(t | M_i(t)) = h_0(t) \exp\{ \gamma^T w_i + \color{#ff7f0e}{\alpha m_i(t)} \},$$`
+  where:
+  
+  - `\(\color{#ff7f0e}{M_i(t) = \{ m_i(s), 0 \leq s &lt; t \}}\)` represents the longitudinal history,
+  
+  - `\(\color{#2ca02c}{\alpha}\)` quantifies the association between the time-varying covariate and the risk of an event,
+  
+  - `\(\color{#ff7f0e}{w_i}\)` represents the baseline covariates.
+
+---
+
+#### &lt;span style="color: #1f77b4;"&gt;Step 2: Reconstructing Covariate History&lt;/span&gt;
+
+- Step 2: From the observed longitudinal data `\(\color{#2ca02c}{y_i(t)}\)`, reconstruct the covariate history for each subject.
+
+- We use a &lt;span style="color: #2ca02c;"&gt;mixed effects model&lt;/span&gt; to achieve this (focusing on continuous covariates for now):
+ `$$y_i(t) = \color{blue}{m_i(t)} + \epsilon_i(t)$$`
+  `$$= \color{blue}{x_i(t)^T \beta + z_i(t)^T b_i} + \epsilon_i(t),$$`
+  where:
+  
+  - `\(\color{#ff7f0e}{x_i(t)}\)` and `\(\color{#ff7f0e}{\beta}\)`: Fixed-effects part,
+ 
+  - `\(\color{blue}{z_i(t)}\)` and `\(\color{blue}{b_i}\)`: Random-effects part, `\(\color{#ff7f0e}{b_i \sim N(0, D)}\)`, `\(\color{#ff7f0e}{\epsilon_i(t) \sim N(0, \sigma^2)}\)`.
+
+---
+
+#### &lt;span style="color:blue"&gt;Step 3: Associating the Two Processes and Defining a Joint Distribution Model&lt;/span&gt;
+
+Joint models for associating two processes are often structured as follows (Tsiatis &amp; Davidian, Stat. Sinica, 2004):
+
+The joint distribution is given by:
+`$$p(y_i, T_i, \delta_i) = Z p(y_i | b_i) h(T_i | b_i)^{\delta_i} S(T_i | b_i) p(b_i) \, db_i,$$`
+
+where:
+- `\(b_i\)` is a vector of random effects that explains the interdependencies.
+
+- `\(p(\cdot)\)` represents the density function.
+- `\(S(\cdot)\)` represents the survival function.
+- `\(Z\)` represents any normalizing constant.
+
+This structure allows us to define a model for the joint distribution of the two processes.
+
+---
+
+#### &lt;span style="color:blue"&gt;Analysis of a Real Data Example Using JM&lt;/span&gt;
+
+- Consider a &lt;span style="color:green"&gt;longitudinal study&lt;/span&gt; on 467 HIV infected patients who had failed or were intolerant of zidovudine therapy.
+
+- Aim:  &lt;span style="color:green"&gt;compare the efficacy and safety&lt;/span&gt; of two alternative antiretroviral drugs: **&lt;span style="color:red"&gt;didanosine (ddI) and zalcitabine (ddC)&lt;/span&gt;**.
+
+- Patients were randomly assigned to receive either ddI or ddC, and &lt;span style="color:blue"&gt;CD4 cell counts&lt;/span&gt; were recorded at study entry and at 2, 6, 12, and 18 months thereafter.
+   - By the end of the study, &lt;span style="color:red"&gt;188 patients had died&lt;/span&gt;, resulting in &lt;span style="color:red"&gt;59.7% censoring&lt;/span&gt;.
+
+- Our &lt;span style="color:green"&gt;main research question&lt;/span&gt; is to test for a treatment effect on survival after adjusting for the CD4 cell count.
+
+- "The &lt;span style="color:blue"&gt;CD4 cell count measurements&lt;/span&gt; are &lt;span style="color:blue"&gt;generated by patients&lt;/span&gt; and are &lt;span style="color:blue"&gt;only available at specific visit times&lt;/span&gt;. 
+    - This situation exemplifies a typical &lt;span style="color:green"&gt;time-dependent covariate&lt;/span&gt;, measured &lt;span style="color:green"&gt;intermittently with error&lt;/span&gt;."
+
+---
+
+- The &lt;span style="color:green"&gt;longitudinal and survival information&lt;/span&gt; is available in the data frames `aids` and `aids.id` respectively.
+
+- The CD4 cell counts exhibit &lt;span style="color:red"&gt;right-skewed distribution shapes&lt;/span&gt;; for analysis, we work with the &lt;span style="color:red"&gt;square root&lt;/span&gt; of the CD4 cell values.
+
+- As a descriptive analysis, &lt;span style="color:purple"&gt;Figure 1&lt;/span&gt; shows &lt;span style="color:purple"&gt;subject-specific longitudinal profiles&lt;/span&gt; and the &lt;span style="color:purple"&gt;Kaplan-Meier estimate&lt;/span&gt; for time-to-death.
+
+---
+
+#### &lt;span style="color:blue"&gt;Descriptive Analysis - Longitudinal Profiles and Survival&lt;/span&gt;
+
+To perform a &lt;span style="color:green"&gt;descriptive analysis&lt;/span&gt; of the data, we can visualize the longitudinal profiles and survival curves using R and the `JM` and `lattice` libraries.
+
+
+```r
+library("JM"); library("lattice")
+xyplot(sqrt(CD4) ~ obstime | drug, group = patient, data = aids,
+       xlab = "Months", ylab = expression(sqrt("CD4")), col = 1, type = "l")
+```
+
+&lt;img src="joint-model2_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+---
+
+
+```r
+# Survival Curves
+plot(survfit(Surv(Time, death) ~ drug, data = aids.id), conf.int = FALSE,
+     mark.time = TRUE, col = c("black", "red"), lty = 1:2,
+     ylab = "Survival", xlab = "Months")
+legend("topright", c("ddC", "ddI"), lty = 1:2, col = c("black", "red"),
+       bty = "n")
+```
+
+&lt;img src="joint-model2_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+#### &lt;span style="color:blue"&gt;Observations and Initial Analysis&lt;/span&gt;
+
+- We observe that &lt;span style="color:green"&gt;both groups&lt;/span&gt; of patients exhibit &lt;span style="color:green"&gt;similar variability&lt;/span&gt; in their longitudinal profiles.
+
+- However, from the &lt;span style="color:purple"&gt;Kaplan-Meier estimate &lt;/span&gt;, it appears that the &lt;span style="color:blue"&gt;ddC group&lt;/span&gt; has slightly &lt;span style="color:blue"&gt;higher survival&lt;/span&gt; than the ddI group after six months of follow-up.
+
+- To highlight the advantages of the joint modelling approach, we will begin with a &lt;span style="color:red"&gt;'naive' analysis&lt;/span&gt;. 
+
+- In this analysis, we &lt;span style="color:red"&gt;ignore the special characteristics&lt;/span&gt; of CD4 cell counts and fit a Cox model that includes the treatment indicator and CD4 as a typical time-dependent covariate.
+
+---
+
+- We will use the &lt;span style="color:orange"&gt;standard counting process form&lt;/span&gt; of the Cox model to fit this analysis:
+
+
+```r
+td.Cox &lt;- coxph(Surv(start, stop, event) ~ drug + sqrt(CD4), data = aids)
+summary(td.Cox)
+```
+
+```
+## Call:
+## coxph(formula = Surv(start, stop, event) ~ drug + sqrt(CD4), 
+##     data = aids)
+## 
+##   n= 1405, number of events= 188 
+## 
+##               coef exp(coef) se(coef)      z Pr(&gt;|z|)    
+## drugddI    0.32678   1.38650  0.14708  2.222   0.0263 *  
+## sqrt(CD4) -0.72302   0.48528  0.07997 -9.042   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+##           exp(coef) exp(-coef) lower .95 upper .95
+## drugddI      1.3865     0.7212    1.0393    1.8498
+## sqrt(CD4)    0.4853     2.0606    0.4149    0.5676
+## 
+## Concordance= 0.696  (se = 0.018 )
+## Likelihood ratio test= 86.14  on 2 df,   p=&lt;2e-16
+## Wald test            = 83.51  on 2 df,   p=&lt;2e-16
+## Score (logrank) test = 83.25  on 2 df,   p=&lt;2e-16
+```
+
+---
+
+#### &lt;span style="color:blue"&gt;Advanced Analysis - Fitting a Joint Model&lt;/span&gt;
+
+- After adjusting for the &lt;span style="color:green"&gt;square root of CD4 count&lt;/span&gt; in the Cox model, &lt;span style="color:red"&gt;no strong evidence&lt;/span&gt; for a treatment effect is observed.
+
+- We proceed by &lt;span style="color:green"&gt;specifying and fitting a joint model&lt;/span&gt; that explicitly postulates a linear mixed-effects model for CD4 cell counts.
+
+- &lt;span style="color:green"&gt;Taking advantage&lt;/span&gt; of the randomization setup of the study, we include in the fixed-effects part of the &lt;span style="color:green"&gt;longitudinal submodel&lt;/span&gt; the main effect of time and the interaction of treatment with time.
+
+- In the random-effects design matrix, we include an intercept and a time term.
+
+- For the &lt;span style="color:green"&gt;survival submodel&lt;/span&gt; (similarly to the Cox model), we include the treatment effect as a time-independent covariate, and as a time-dependent one, the &lt;span style="color:green"&gt;true underlying effect&lt;/span&gt; of CD4 cell count estimated from the longitudinal model.
+
+- The &lt;span style="color:green"&gt;baseline risk function&lt;/span&gt; is assumed piecewise constant with &lt;span style="color:green"&gt;six knots&lt;/span&gt; placed at equally spaced percentiles of the observed event times.
+
+---
+
+#### &lt;span style="color:blue"&gt;Fitting the Joint Model&lt;/span&gt;
+
+- To fit the joint model, a &lt;span style="color:green"&gt;two-step process&lt;/span&gt; is followed. First, the linear mixed-effects and Cox models are fitted &lt;span style="color:green"&gt;separately&lt;/span&gt;.
+
+- The &lt;span style="color:green"&gt;returned objects&lt;/span&gt; from these separate fits are then used as main arguments in the `jointModel()` function.
+
+- Importantly, the structure of the joint model for the &lt;span style="color:green"&gt;longitudinal and survival submodels&lt;/span&gt; mirrors that of the separately fitted models.
+
+- In the survival submodel, the &lt;span style="color:green"&gt;estimated 'true' longitudinal outcome&lt;/span&gt; `\(m_i(t)\)` is incorporated into the linear predictor.
+
+- Due to the fact that `jointModel()` extracts necessary information from these two objects, in the `coxph()` function call, we must specify `x = TRUE` to include the &lt;span style="color:orange"&gt;Cox model's design matrix&lt;/span&gt; in the returned object.
+---
+
+
+```r
+# Separate Model Fits
+fitLME &lt;- lme(sqrt(CD4) ~ obstime + obstime:drug,
+              random = ~ obstime | patient, data = aids)
+summary(fitLME)
+```
+
+```
+## Linear mixed-effects model fit by REML
+##   Data: aids 
+##        AIC      BIC    logLik
+##   2699.069 2735.789 -1342.535
+## 
+## Random effects:
+##  Formula: ~obstime | patient
+##  Structure: General positive-definite, Log-Cholesky parametrization
+##             StdDev     Corr  
+## (Intercept) 0.87143264 (Intr)
+## obstime     0.03617033 -0.015
+## Residual    0.36844785       
+## 
+## Fixed effects:  sqrt(CD4) ~ obstime + obstime:drug 
+##                      Value  Std.Error  DF  t-value p-value
+## (Intercept)      2.5118005 0.04258901 936 58.97766  0.0000
+## obstime         -0.0375070 0.00440225 936 -8.51997  0.0000
+## obstime:drugddI  0.0082141 0.00632277 936  1.29912  0.1942
+##  Correlation: 
+##                 (Intr) obstim
+## obstime         -0.118       
+## obstime:drugddI  0.000 -0.687
+## 
+## Standardized Within-Group Residuals:
+##           Min            Q1           Med            Q3           Max 
+## -4.2480426451 -0.4082420037 -0.0002391742  0.4336550882  3.7150583354 
+## 
+## Number of Observations: 1405
+## Number of Groups: 467
+```
+
+---
+
+```r
+fitSURV &lt;- coxph(Surv(Time, death) ~ drug, data = aids.id, x = TRUE)
+summary(fitSURV)
+```
+
+```
+## Call:
+## coxph(formula = Surv(Time, death) ~ drug, data = aids.id, x = TRUE)
+## 
+##   n= 467, number of events= 188 
+## 
+##           coef exp(coef) se(coef)     z Pr(&gt;|z|)
+## drugddI 0.2102    1.2339   0.1462 1.437    0.151
+## 
+##         exp(coef) exp(-coef) lower .95 upper .95
+## drugddI     1.234     0.8104    0.9264     1.643
+## 
+## Concordance= 0.531  (se = 0.019 )
+## Likelihood ratio test= 2.07  on 1 df,   p=0.2
+## Wald test            = 2.07  on 1 df,   p=0.2
+## Score (logrank) test = 2.07  on 1 df,   p=0.1
+```
+
+---
+
+
+```r
+# Joint Model Fit
+fitJM &lt;- jointModel(fitLME, fitSURV, timeVar = "obstime",
+                    method = "piecewise-PH-GH")
+```
+
+
+```r
+summary(fitJM)
+```
+
+```{}
+Coefficients:
+Longitudinal Process
+                  Value Std.Err z-value p-value
+(Intercept)      2.5558  0.0372 68.7961 &lt;0.0001
+obstime         -0.0423  0.0046 -9.1931 &lt;0.0001
+obstime:drugddI  0.0051  0.0065  0.7821  0.4342
+
+Event Process
+            Value Std.Err z-value p-value
+drugddI    0.3511  0.1537  2.2839  0.0224
+*Assoct    -1.1016  0.1180 -9.3388 &lt;0.0001
+log(xi.1) -1.6489  0.2498 -6.6000        
+log(xi.2) -1.3393  0.2394 -5.5940        
+log(xi.3) -1.0231  0.2861 -3.5758        
+log(xi.4) -1.5802  0.3736 -4.2299        
+log(xi.5) -1.4722  0.3500 -4.2069        
+log(xi.6) -1.4383  0.4283 -3.3584        
+log(xi.7) -1.4780  0.5455 -2.7094        
+```
+
+---
+
+#### &lt;span style="color:blue"&gt;Interpreting Joint Model Results&lt;/span&gt;
+
+- The &lt;span style="color:orange"&gt;main argument `timeVar` of `jointModel()`&lt;/span&gt; specifies the name of the time variable in the linear mixed-effects model. 
+  - This is vital for the computation of `\(m_i(t)\)`.
+
+- The `summary()` method &lt;span style="color:orange"&gt;provides a detailed output&lt;/span&gt;, including parameter estimates, their standard errors, and asymptotic Wald tests for both the longitudinal and survival submodels.
+
+- In the &lt;span style="color:purple"&gt;event process results&lt;/span&gt;, the parameter labeled **Assoct** corresponds to parameter `\(\alpha\)`. 
+   - It measures the effect of `\(m_i(t)\)` (in our case, the true square root CD4 cell count) on the risk of death. 
+
+The parameters `\(x_i\)` are (for `\(i = 1, \ldots, 7\)`) parameters for the piecewise constant baseline risk function.
+
+---
+
+- A comparison between the &lt;span style="color:green"&gt;standard time-dependent Cox model&lt;/span&gt; and the &lt;span style="color:green"&gt;joint model&lt;/span&gt; reveals interesting features.
+
+- The regression coefficient for &lt;span style="color:blue"&gt;ddI is larger in magnitude&lt;/span&gt; in the joint model, indicating a slightly &lt;span style="color:blue"&gt;stronger treatment effect&lt;/span&gt;.
+
+- A significant &lt;span style="color:blue"&gt;bias&lt;/span&gt; is observed for the &lt;span style="color:blue"&gt;CD4 cell count effect&lt;/span&gt;. 
+
+- In the time-dependent Cox model, the estimated regression coefficient is `\(-0.72\)`, whereas in the joint model, it's `\(-1.10\)`.
+
+- For obtaining the Hazard Ratio for this variable we have to exponenciate the value exposed in the table. 
+- In this case the result is 0.33. According to this, one unit increse on the CD4 count cell decreases the risk 67%.
+
+---
+
+### Results Summary
+
+- Coefficients (SEs) from mixed-effects model and joint model
+
+| Variable        | Mixed model       | Joint model       |
+|-----------------|-------------------|-------------------|
+| obstime         | -0.038(0.004)     | -0.042(0.004)     |
+| obstime:drugddI | 0.008 (0.006)      | 0.005 (0.007)     |
+
+- Coefficients (SEs) from extended Cox model and joint model
+
+| Variable        | Cox model         | Joint model       |
+|-----------------|-------------------|-------------------|
+| drugddI         | 0.327(0.147)      | 0.351 (0.154)     |
+| cd4             | -0.723(0.080)     | -1.102(0.118)     |
+
+
+
+
+---
+
+#### &lt;span style="color:blue"&gt;Alternative Test - Likelihood Ratio Test (LRT)&lt;/span&gt;
+
+- The &lt;span style="color:blue"&gt;Likelihood Ratio Test (LRT)&lt;/span&gt; provides an alternative to the Wald test for hypothesis testing.
+
+- After fitting the joint model under the null hypothesis of &lt;span style="color:red"&gt;no treatment effect&lt;/span&gt; in the survival submodel, we can use the &lt;span style="color:orange"&gt;`anova()` method&lt;/span&gt; to perform the LRT:
+
+
+```r
+# Null Hypothesis Testing
+fitSURV2 &lt;- coxph(Surv(Time, death) ~ 1, data = aids.id, x = TRUE)
+fitJM2 &lt;- jointModel(fitLME, fitSURV2, timeVar = "obstime", method = "piecewise-PH-GH")
+anova(fitJM2, fitJM) # The model under the null is the first one
+```
+
+```
+## 
+##            AIC     BIC  log.Lik  LRT df p.value
+## fitJM2 4250.53 4312.72 -2110.26                
+## fitJM  4247.29 4313.64 -2107.65 5.23  1  0.0222
+```
+
+- According to the `pvalue` (as with the Wald test) we arrive to the same conclusion, there exist an affect of the treatment on the risk.
+---
+- Additionally, if we want to obtain estimates of the Hazard Ratio with confidence intervals for the final model it is possible ti apply the `confint` function to the created object
+
+
+```r
+confint(fitJM, parm = "Event")
+```
+
+```
+##               2.5 %       est.     97.5 %
+## drugddI  0.04979688  0.3511323  0.6524677
+## Assoct  -1.33281297 -1.1016129 -0.8704128
+```
+
+```r
+exp(confint(fitJM, parm = "Event"))
+```
+
+```
+##             2.5 %      est.    97.5 %
+## drugddI 1.0510576 1.4206752 1.9202736
+## Assoct  0.2637343 0.3323346 0.4187786
+```
+
+
+---
+### `jointModel` Arguments
+
+- `method:` Specifies the baseline hazard function, parameterization of the relative risk model, and procedure for numerical integration.
+
+- Available methods:
+   - `weibull-PH-aGH` (default)
+   - `weibull-PH-GH`
+   - `weibull-AFT-aGH`
+   - `weibull-AFT-GH`
+   - `piecewise-PH-aGH`
+   - `piecewise-PH-GH`
+   - `spline-PH-aGH` (allows strata)
+   - `spline-PH-GH` (allows strata)
+   - `Cox-PH-aGH`
+   - `Cox-PH-GH`
+- `PH`: proportional hazards; `AFT`: accelerated failure time
+- `GH` or `aGH`: standard or adaptive Gauss-Hermite quadrature
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightLines": true,
+"ratio": "14:9",
+"highlightSpans": true,
+"highlightStyle": "github",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

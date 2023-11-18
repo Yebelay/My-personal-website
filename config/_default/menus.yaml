@@ -24,7 +24,9 @@ main:
   - name: CV
     url: uploads/resume.pdf
     weight: 50
-
+  - name: Contact
+    url: '#contact'
+    weight: 90
 
 # Sub-home menu
   - name: About
@@ -35,12 +37,5 @@ main:
     url: '#Projects'
     parent: " "
     weight: 70
-  - name: Background
-    url: '#cv'
-    parent: " "
-    weight: 80
-  - name: Contact
-    url: '#contact'
-    parent: " "
-    weight: 90
+
   

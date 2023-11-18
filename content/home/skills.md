@@ -18,30 +18,30 @@ subtitle:
 
 feature:
   - description: R | STATA | SAS | SPSS
-    icon: r-project
-    icon_pack: fab
+    icon: software
+    icon_pack: custom
     name: R Programming
     
   - description: Kobo toolbox | SurveyCTO | REDCap 
-    icon: sas
+    icon: ODK
     icon_pack: custom
     name: Data collection app
     
   - description: Project Management | Surveys | budget 
-    icon: user-astronaut
-    icon_pack: fas
+    icon: project
+    icon_pack: custom
     name: Project Management
   - description: Causal inference | Impact Evaluation
-    icon: gamepad
-    icon_pack: fas
+    icon: causal
+    icon_pack: custom
     name: Impact Evaluation
   - description: Power BI | R markdown (flexdashboard) | Shine app
-    icon: brain
-    icon_pack: fas
+    icon: dashboard
+    icon_pack: custom
     name: Dashboard
   - description: Study design | Sampling technique | Statistical modelling
-    icon: file-audio
-    icon_pack: fas
+    icon: sampling
+    icon_pack: custom
     name: Study design
 # Uncomment to use emoji icons.
 #- icon: ":smile:"

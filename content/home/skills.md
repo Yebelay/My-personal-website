@@ -23,7 +23,7 @@ feature:
     name: R Programming
   - description: Kobo toolbox | SurveyCTO | REDCap 
     icon: stata
-    icon_pack: fab
+    icon_pack: custom
     name: Data collection app
   - description: Project Management | Surveys | budget 
     icon: user-astronaut
@@ -51,8 +51,8 @@ feature:
 # Place your custom SVG icon in `assets/media/icons/`.
 # Reference the SVG icon name (without `.svg` extension) in the `icon` field.
 # For example, reference `assets/media/icons/xyz.svg` as `icon: 'xyz'`
-- icon: "stata"
-  icon_pack: "custom"
-  name: "Surfing"
-  description: "90%"
+#- icon: "stata"
+ # icon_pack: "custom"
+  #name: "Surfing"
+  #description: "90%"
 ---

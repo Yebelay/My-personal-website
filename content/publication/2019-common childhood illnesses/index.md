@@ -1,6 +1,6 @@
 ---
 title: "Health care utilization for common childhood illnesses in rural parts of Ethiopia: Evidence from the 2016 Ethiopian demographic and health survey"
-publishDate: 2019-01-29
+publishDate: 2019-01-14
 authors: ["Muluneh Alene", "Leltework Yismaw", "Yebelay Berelie", "Bekalu Kassie"]
 
 author_notes:

@@ -21,12 +21,10 @@ feature:
     icon: software
     icon_pack: custom
     name: R Programming
-    
   - description: Kobo toolbox | SurveyCTO | REDCap 
     icon: ODK
     icon_pack: custom
     name: Data collection app
-    
   - description: Project Management | Surveys | budget 
     icon: project
     icon_pack: custom

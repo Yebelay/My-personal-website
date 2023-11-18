@@ -22,7 +22,7 @@ feature:
     icon_pack: custom
     name: R Programming
   - description: Kobo toolbox | SurveyCTO | REDCap 
-    icon: stata
+    icon: causal
     icon_pack: custom
     name: Data collection app
   - description: Project Management | Surveys | budget 

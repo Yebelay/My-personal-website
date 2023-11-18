@@ -1,5 +1,5 @@
 ---
-title: "Presentation Ninja"
+title: "LDA"
 subtitle: "⚔<br/>with xaringan"
 author: "Yihui Xie"
 institute: "RStudio, PBC"

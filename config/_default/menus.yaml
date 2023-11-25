@@ -15,7 +15,7 @@ main:
     url: '#Lecture'
     weight: 30
   - name: Skills
-    url: 'Skills'
+    url: '/Skills'
     weight: 50
   - name: experience
     url: '#experience'

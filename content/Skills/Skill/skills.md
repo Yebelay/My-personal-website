@@ -1,4 +1,24 @@
 ---
+# An instance of the Featurette widget.
+# Documentation: https://wowchemy.com/docs/page-builder/
+widget: featurette
+
+# This file represents a page section.
+headless: true
+
+# Order that this section appears on the page.
+weight: 50
+
+title: Skills
+subtitle:
+
+content:
+  # Automatically link email and phone or display as text?
+  autolink: true
+# Showcase personal skills or business features.
+# - Add/remove as many `feature` blocks below as you like.
+# - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
+
 feature:
   - description: R | STATA | SAS | SPSS
     icon: software
@@ -40,4 +60,3 @@ feature:
   #description: "90%"
 
 ---
-

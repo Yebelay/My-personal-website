@@ -15,15 +15,15 @@ main:
     url: '#Lecture'
     weight: 30
   - name: Skills
-    url: '#Skills'
-    weight: 40
+    url: 'Skills'
+    weight: 50
   - name: experience
     url: '#experience'
     weight: 40
 # To enable, copy your resume/CV to `static/uploads/resume.pdf` and uncomment the lines below.
   - name: CV
     url: uploads/resume.pdf
-    weight: 50
+    weight: 60
   - name: Contact
     url: '#contact'
     weight: 90
@@ -32,10 +32,9 @@ main:
   - name: About
     url: '#about'
     parent: " "
-    weight: 60
-  - name: Projects
+    weight: 80
+  - name: Lecture
     url: '#Projects'
-    parent: " "
     weight: 70
 
   

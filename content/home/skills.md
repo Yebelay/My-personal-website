@@ -17,30 +17,32 @@ subtitle:
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 
 feature:
-  - description: R | STATA | SAS | SPSS
-    icon: software
-    icon_pack: custom
-    name: R Programming
-  - description: Kobo toolbox | SurveyCTO | REDCap 
-    icon: causal
-    icon_pack: custom
-    name: Data collection app
-  - description: Project Management | Surveys | budget 
-    icon: project
-    icon_pack: custom
-    name: Project Management
-  - description: Causal inference | Impact Evaluation
-    icon: causal
-    icon_pack: custom
-    name: Impact Evaluation
-  - description: Power BI | R markdown (flexdashboard) | Shine app
-    icon: dashboard
-    icon_pack: custom
-    name: Dashboard
-  - description: Study design | Sampling technique | Statistical modelling
-    icon: sampling
-    icon_pack: custom
-    name: Study design
+  feature:
+   - description: R | STATA | SAS | SPSS
+     icon: software
+     icon_pack: custom
+     name: R Programming
+     svg_style: "width: 50px; height: 50px;"  # Adjust size here
+   - description: Kobo toolbox | SurveyCTO | REDCap 
+     icon: causal
+     icon_pack: custom
+     name: Data collection app
+   - description: Project Management | Surveys | budget 
+     icon: project
+     icon_pack: custom
+     name: Project Management
+   - description: Causal inference | Impact Evaluation
+     icon: causal
+     icon_pack: custom
+     name: Impact Evaluation
+   - description: Power BI | R markdown (flexdashboard) | Shine app
+     icon: dashboard
+     icon_pack: custom
+     name: Dashboard
+   - description: Study design | Sampling technique | Statistical modelling
+     icon: sampling
+     icon_pack: custom
+     name: Study design
 # Uncomment to use emoji icons.
 #- icon: ":smile:"
 #  icon_pack: "emoji"

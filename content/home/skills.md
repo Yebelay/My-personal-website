@@ -21,7 +21,7 @@ content:
 
 feature:
   - description: R | STATA | SAS | SPSS
-    icon: software
+    icon: software1
     icon_pack: custom
     name: R Programming
   - description: Kobo toolbox | SurveyCTO | REDCap 

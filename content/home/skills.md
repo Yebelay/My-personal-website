@@ -29,26 +29,32 @@ feature:
         icon_pack: custom
       - icon: sas
         icon_pack: custom
- - description: Kobo toolbox | SurveyCTO | REDCap 
+
+  - description: Kobo toolbox | SurveyCTO | REDCap 
     icon: causal
     icon_pack: custom
     name: Data collection app
+
   - description: Project Management | Surveys | budget 
     icon: project
     icon_pack: custom
     name: Project Management
+
   - description: Causal inference | Impact Evaluation
     icon: causal
     icon_pack: custom
     name: Impact Evaluation
+
   - description: Power BI | R markdown (flexdashboard) | Shine app
     icon: dashboard
     icon_pack: custom
     name: Dashboard
+
   - description: Study design | Sampling technique | Statistical modelling
     icon: sampling
     icon_pack: custom
     name: Study design
+
 # Uncomment to use emoji icons.
 #- icon: ":smile:"
 #  icon_pack: "emoji"

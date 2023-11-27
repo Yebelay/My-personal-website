@@ -28,8 +28,8 @@ feature:
     icon_pack: custom
     name: Data collection app
   - description: Project Management | Surveys | budget 
-    icon: Project Management
-    icon_pack: fab
+    icon: project
+    icon_pack: custom
     name: Project Management
   - description: Causal inference | Impact Evaluation
     icon: causal

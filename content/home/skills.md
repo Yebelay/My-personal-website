@@ -36,7 +36,7 @@ feature:
     icon_pack: custom
     name: Impact Evaluation
   - description: Power BI | R markdown (flexdashboard) | Shine app
-    icon: dashboard
+    icon: graph
     icon_pack: custom
     name: Dashboard
   - description: Study design | Sampling technique | Statistical modelling

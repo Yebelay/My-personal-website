@@ -18,20 +18,19 @@ content:
 # Showcase personal skills or business features.
 # - Add/remove as many `feature` blocks below as you like.
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
-
 feature:
   - description: Statistical Software
-    icon: software   
+    icon: software
     icon_pack: custom
     name: Statistical Software
     subcategories:
       - icon: r-project
         icon_pack: fab
-      - icon: stata   
+      - icon: stata
         icon_pack: custom
-      - icon: sas  
+      - icon: sas
         icon_pack: custom
-      - icon: spss_logo   
+      - icon: spss
         icon_pack: custom
   - description: Kobo toolbox | SurveyCTO | REDCap 
     icon: causal

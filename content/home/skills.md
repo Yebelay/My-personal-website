@@ -25,7 +25,7 @@ feature:
     icon_pack: fab
     name: Statistical Software
   - description: Kobo toolbox | SurveyCTO | REDCap 
-    icon: odk  
+    icon: mobileanalytics  
     icon_pack: custom
     name: Data collection app
   - description: Project Management | Surveys | budget 

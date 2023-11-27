@@ -19,37 +19,26 @@ content:
 # - Add/remove as many `feature` blocks below as you like.
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 feature:
-  - icon: R_SPSS_SAS
-    icon_pack: custom
+  - description: R | SATA | SAS | SPSS      
+    icon: r-project
+    icon_pack: fab
     name: Statistical Software
-    subcategories:
-      - icon: r-project
-        icon_pack: fab
-      - icon: stata
-        icon_pack: custom
-      - icon: sas
-        icon_pack: custom
-
   - description: Kobo toolbox | SurveyCTO | REDCap 
     icon: causal
     icon_pack: custom
     name: Data collection app
-
   - description: Project Management | Surveys | budget 
     icon: project
     icon_pack: custom
     name: Project Management
-
   - description: Causal inference | Impact Evaluation
     icon: causal
     icon_pack: custom
     name: Impact Evaluation
-
   - description: Power BI | R markdown (flexdashboard) | Shine app
     icon: dashboard
     icon_pack: custom
     name: Dashboard
-
   - description: Study design | Sampling technique | Statistical modelling
     icon: sampling
     icon_pack: custom

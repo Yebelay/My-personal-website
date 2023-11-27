@@ -22,15 +22,14 @@ feature:
   - icon: R_SPSS_SAS
     icon_pack: custom
     name: Statistical Software
-    subcategories:
-      - icon: r-project
-        icon_pack: fab
-      - icon: stata
-        icon_pack: custom
-      - icon: sas
-        icon_pack: custom
-      - icon: spss
-        icon_pack: custom
+  - icon: r-project
+    icon_pack: fab
+  - icon: stata
+    icon_pack: custom
+  - icon: sas
+    icon_pack: custom
+  - icon: spss
+    icon_pack: custom
   - description: Kobo toolbox | SurveyCTO | REDCap 
     icon: causal
     icon_pack: custom

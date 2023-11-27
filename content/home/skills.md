@@ -32,7 +32,7 @@ feature:
     icon_pack: custom
     name: Project Management
   - description: Causal inference | Impact Evaluation
-    icon: causal
+    icon: IE
     icon_pack: custom
     name: Impact Evaluation
   - description: Power BI | R markdown (flexdashboard) | Shine app

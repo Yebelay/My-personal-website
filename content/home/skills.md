@@ -33,7 +33,7 @@ feature:
     icon_pack: custom
     name: Project Management
   - description: Causal inference | Impact Evaluation
-    icon: IE
+    icon: impact
     icon_pack: custom
     name: Impact Evaluation
   - description: Power BI | R markdown (flexdashboard) | Shine app
@@ -41,7 +41,7 @@ feature:
     icon_pack: custom
     name: Dashboard
   - description: Study design | Sampling technique | Statistical modelling
-    icon: sampling
+    icon: study
     icon_pack: custom
     name: Study design
 

@@ -23,9 +23,8 @@ feature:
     icon: r-project
     icon_pack: fab
     name: Statistical Software
-
   - description: Kobo toolbox | SurveyCTO | REDCap 
-    icon: causal
+    icon: odk  
     icon_pack: custom
     name: Data collection app
   - description: Project Management | Surveys | budget 

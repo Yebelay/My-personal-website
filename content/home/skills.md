@@ -29,8 +29,6 @@ feature:
         icon_pack: custom
       - icon: sas
         icon_pack: custom
-      - icon: ODK
-        icon_pack: custom
  - description: Kobo toolbox | SurveyCTO | REDCap 
     icon: causal
     icon_pack: custom

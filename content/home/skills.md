@@ -22,7 +22,6 @@ feature:
   - description: Statistical Software
     icon: R_SPSS_SAS
     icon_pack: custom
-    name: Statistical Software
     subcategories:
       - icon: r-project
         icon_pack: fab

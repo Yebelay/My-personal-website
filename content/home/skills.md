@@ -29,7 +29,7 @@ feature:
         icon_pack: custom
       - icon: sas
         icon_pack: custom
-      - icon: spss
+      - icon: sas
         icon_pack: custom
  - description: Kobo toolbox | SurveyCTO | REDCap 
     icon: causal

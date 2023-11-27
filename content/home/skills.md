@@ -19,11 +19,8 @@ content:
 # - Add/remove as many `feature` blocks below as you like.
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 feature:
-  - description: >
-    <span style="color:red">R</span> (Red) |
-    <span style="color:blue">STATA</span> (Blue) |
-    <span style="color:green">SAS</span> (Green) |
-    <span style="color:orange">SPSS</span> (Orange)
+  - description: <span style="color:red">R</span> | <span style="color:blue">STATA</span> |
+    <span style="color:green">SAS</span> |  <span style="color:orange">SPSS</span> 
     icon: r-project
     icon_pack: fab
     name: Statistical Software

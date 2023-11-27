@@ -19,9 +19,9 @@ content:
 # - Add/remove as many `feature` blocks below as you like.
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 feature:
-  - description: Statistical Software
-    icon: R_SPSS_SAS
+  - icon: R_SPSS_SAS
     icon_pack: custom
+    name: Statistical Software
     subcategories:
       - icon: r-project
         icon_pack: fab

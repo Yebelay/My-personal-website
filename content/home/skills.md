@@ -20,10 +20,19 @@ content:
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 
 feature:
-  - description: R | STATA | SAS | SPSS
-    icon: R_SPSS_SAS
+  - description: Statistical Software
+    icon: software   
     icon_pack: custom
-    name: R Programming
+    name: Statistical Software
+    subcategories:
+      - icon: r-project
+        icon_pack: fab
+      - icon: stata   
+        icon_pack: custom
+      - icon: sas  
+        icon_pack: custom
+      - icon: spss_logo   
+        icon_pack: custom
   - description: Kobo toolbox | SurveyCTO | REDCap 
     icon: causal
     icon_pack: custom

@@ -20,7 +20,7 @@ content:
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 feature:
   - description: Statistical Software
-    icon: software
+    icon: R_SPSS_SAS
     icon_pack: custom
     name: Statistical Software
     subcategories:

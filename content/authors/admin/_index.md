@@ -22,7 +22,7 @@ interests:
 
 organizations:
 
-- name: Bio 
+- name: '' 
 
 role: Bio statistician
 social:
@@ -32,6 +32,7 @@ social:
 - icon: github
   icon_pack: fab
   link: https://github.com/Yebelay
+  
 - icon: linkedin
   icon_pack: fab
   link: https://www.linkedin.com/in/yebelay/

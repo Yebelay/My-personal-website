@@ -23,7 +23,7 @@ interests:
 
 organizations:
 
-- name: Debre Markos University
+- name: Biostatistician
 
 role: Lecturer at Department of Statistics and Researcher at C4ED
 social:

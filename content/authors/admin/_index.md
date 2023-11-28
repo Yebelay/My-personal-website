@@ -23,9 +23,9 @@ interests:
 
 organizations:
 
-- name: ""
+- name: Bio statisticia
 
-role: Bio-statistician
+role: Bio statistician
 social:
 - icon: envelope
   icon_pack: fas

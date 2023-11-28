@@ -20,12 +20,11 @@ interests:
 - Longitudinal Data Analysis
 - Survival Data Analysis
 
-
 organizations:
 
-- name: Biostatistician
+- name: Bio 
 
-role: Lecturer at Department of Statistics and Researcher at C4ED
+role: Bio statistician
 social:
 - icon: envelope
   icon_pack: fas

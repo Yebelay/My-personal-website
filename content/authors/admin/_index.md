@@ -23,9 +23,9 @@ interests:
 
 organizations:
 
-- name: Bio statisticia
+- name: Debre Markos University
 
-role: Bio statistician
+role: Lecturer at Department of Statistics and Researcher at C4ED
 social:
 - icon: envelope
   icon_pack: fas

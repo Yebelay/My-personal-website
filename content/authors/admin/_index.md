@@ -23,9 +23,9 @@ interests:
 
 organizations:
 
-- name: Debre Markos University
+- name: ""
 
-role: Lecturer at Department of Statistics and Researcher at C4ED
+role: Bio-statistician
 social:
 - icon: envelope
   icon_pack: fas

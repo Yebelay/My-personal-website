@@ -8,6 +8,7 @@ slides:
 summary: An introduction to using Wowchemy's Slides feature.
 tags: []
 title: Slides
+
 ---
 
 # Create slides in Markdown with Wowchemy

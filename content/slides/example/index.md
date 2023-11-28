@@ -4,7 +4,7 @@ categories: []
 date: "`r Sys.time()`"
 slides:
   highlight_style: dracula
-  theme: black
+  theme: white
 summary: An introduction to using Wowchemy's Slides feature.
 tags: []
 title: Slides
